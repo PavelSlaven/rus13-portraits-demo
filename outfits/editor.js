@@ -11,15 +11,23 @@ const reset = document.querySelector("#reset");
 const retry = document.querySelector("#retry");
 const status = document.querySelector("#status");
 const images = document.querySelector("#images");
+const portrait = document.querySelector("#portrait");
+const portraitFrame = portrait.parentElement;
+const portraitDownload = document.querySelector("#save-portrait");
+const card = document.querySelector("#card");
+const cardDownload = document.querySelector("#save-card");
+const portraitViewButtons = document.querySelectorAll("[data-portrait-view]");
 const exampleList = document.querySelector("#examples");
-const estateSelect = document.querySelector("#adult-estates");
-const estateExamples = new Map();
-const artwork = ["portrait", "card"].map(view => ({
-  view,
-  image: document.getElementById(view),
-  download: document.getElementById(`save-${view}`),
-  url: null,
-}));
+const presetPickers = [
+  { field: "estate", select: document.querySelector("#adult-estates") },
+  { field: "region", select: document.querySelector("#northwest-examples") },
+].filter(({ select }) => select);
+const groupedExamples = new Map();
+const artworkViews = ["full", "portrait", "card"];
+const portraitLabels = {
+  full: { alt: "Персонаж анфас в полный рост", download: "Скачать персонажа в полный рост в SVG" },
+  portrait: { alt: "Портрет персонажа анфас по пояс", download: "Скачать портрет по пояс в SVG" },
+};
 
 const groups = [
   ["Форма лица", "skull forehead forehead_outline cheekbone cheeks cheek_relief jaw jaw_width jaw_height chin chin_height chin_width chin_mark neck"],
@@ -41,6 +49,9 @@ let renderer;
 let ready = false;
 let pendingRender;
 let sampleModes = {};
+let portraitView = "full";
+let artworkSources = exampleArtwork("man");
+let artworkAvailable = true;
 
 function setStatus(message, { error = false, busy = false } = {}) {
   status.textContent = message;
@@ -111,8 +122,8 @@ function updateOptions() {
     for (const option of select.options) {
       if (!option.value) continue;
       const required = castRestrictions?.[option.value];
-      const wrongAge = appearanceField ? catalog.age_restrictions?.[age]?.[field]?.includes(option.value)
-                                       : age === "child" && Boolean(required);
+      const wrongAge = catalog.age_restrictions?.[age]?.[field]?.includes(option.value)
+        || (!appearanceField && age === "child" && Boolean(required));
       const wrongLength = field === "hair_style" && hairstyles && !hairstyles.includes(option.value);
       option.disabled = option.hidden = Boolean(wrongAge || wrongLength || (required && required !== cast));
       const title = (field === "cast" && childLabels[option.value]) || definition.values[option.value];
@@ -143,22 +154,55 @@ function selection() {
   return payload;
 }
 
-function setArtworkSource(item, url, objectUrl = null) {
-  item.image.src = url;
-  item.download.href = url;
-  item.download.removeAttribute("aria-disabled");
-  if (item.url) URL.revokeObjectURL(item.url);
-  item.url = objectUrl;
+function exampleArtwork(id) {
+  return Object.fromEntries(artworkViews.map(view => [view, `./${id}-${view}.svg`]));
+}
+
+function setArtworkSource(image, download, url) {
+  if (image.getAttribute("src") !== url) image.src = url;
+  if (artworkAvailable) {
+    download.href = url;
+    download.removeAttribute("aria-disabled");
+  } else {
+    download.removeAttribute("href");
+    download.setAttribute("aria-disabled", "true");
+  }
+}
+
+function updatePortrait() {
+  setArtworkSource(portrait, portraitDownload, artworkSources[portraitView]);
+}
+
+function replaceArtwork(sources) {
+  const previousSources = artworkSources;
+  artworkSources = sources;
+  artworkAvailable = true;
+  updatePortrait();
+  setArtworkSource(card, cardDownload, sources.card);
+  for (const url of Object.values(previousSources)) {
+    if (url.startsWith("blob:")) URL.revokeObjectURL(url);
+  }
 }
 
 function showArtwork(result) {
-  if (artwork.some(({ view }) => typeof result[view] !== "string" || !result[view])) {
+  if (artworkViews.some(view => typeof result[view] !== "string" || !result[view])) {
     throw new Error("Генератор вернул неполный портрет.");
   }
-  for (const item of artwork) {
-    const url = URL.createObjectURL(new Blob([result[item.view]], { type: "image/svg+xml" }));
-    setArtworkSource(item, url, url);
+  replaceArtwork(Object.fromEntries(artworkViews.map(view => [
+    view, URL.createObjectURL(new Blob([result[view]], { type: "image/svg+xml" })),
+  ])));
+}
+
+function setPortraitView(view) {
+  portraitView = view;
+  portraitFrame.dataset.view = view;
+  portrait.alt = portraitLabels[view].alt;
+  portraitDownload.download = `rus13-${view}.svg`;
+  portraitDownload.setAttribute("aria-label", portraitLabels[view].download);
+  for (const button of portraitViewButtons) {
+    button.setAttribute("aria-pressed", String(button.dataset.portraitView === view));
   }
+  updatePortrait();
 }
 
 function startRenderer() {
@@ -183,7 +227,7 @@ function startRenderer() {
       if (pendingRender) {
         worker.postMessage(pendingRender);
         pendingRender = null;
-      } else if (estateSelect?.value || exampleList.querySelector('[aria-pressed="true"]')) {
+      } else if (presetPickers.some(({ select }) => select.value) || exampleList.querySelector('[aria-pressed="true"]')) {
         setStatus("");
       }
       return;
@@ -201,7 +245,8 @@ function startRenderer() {
 }
 
 function setActiveExample(active) {
-  if (estateSelect) estateSelect.value = estateExamples.has(active) ? active : "";
+  const grouped = groupedExamples.get(active);
+  for (const { field, select } of presetPickers) select.value = grouped?.[field] ? active : "";
   for (const button of exampleList.children) {
     button.setAttribute("aria-pressed", String(button.dataset.example === active));
   }
@@ -223,7 +268,7 @@ function applyExample(example) {
   setActiveExample(example.id);
   updateOptions();
   updateNotes(example.recipe);
-  for (const item of artwork) setArtworkSource(item, `./${example.id}-${item.view}.svg`);
+  replaceArtwork(exampleArtwork(example.id));
   setStatus(ready ? "" : "Загружаем генератор…", { busy: !ready });
   try {
     startRenderer();
@@ -248,10 +293,9 @@ function scheduleRender(delay = 0) {
   clearTimeout(timer);
   pendingRender = null;
   setActiveExample(null);
-  for (const { download } of artwork) {
-    download.removeAttribute("href");
-    download.setAttribute("aria-disabled", "true");
-  }
+  artworkAvailable = false;
+  updatePortrait();
+  setArtworkSource(card, cardDownload, artworkSources.card);
   updateNotes();
   if (!seed.value) {
     setStatus("Введите seed, чтобы обновить портрет.");
@@ -279,18 +323,21 @@ async function loadCatalog() {
     addGroup("Другие черты", "appearance", Object.keys(catalog.appearance).filter(field => !assigned.has(field)));
     addGroup("Экипировка и фон", "equipment", Object.keys(catalog.equipment).filter(field => !assigned.has(field)));
 
-    const estateGroups = new Map();
+    const groupsByLabel = new Map();
     for (const example of examples) {
-      if (example.estate) {
-        if (!estateSelect) continue;
-        if (!estateGroups.has(example.estate)) {
+      if (example.estate || example.region) {
+        const picker = presetPickers.find(({ field }) => example[field]);
+        if (!picker) continue;
+        const label = example[picker.field];
+        const key = `${picker.field}/${label}`;
+        if (!groupsByLabel.has(key)) {
           const group = document.createElement("optgroup");
-          group.label = example.estate;
-          estateGroups.set(example.estate, group);
-          estateSelect.append(group);
+          group.label = label;
+          groupsByLabel.set(key, group);
+          picker.select.append(group);
         }
-        estateGroups.get(example.estate).append(new Option(example.label, example.id));
-        estateExamples.set(example.id, example);
+        groupsByLabel.get(key).append(new Option(example.label, example.id));
+        groupedExamples.set(example.id, example);
         continue;
       }
       const button = document.createElement("button");
@@ -302,7 +349,7 @@ async function loadCatalog() {
     }
 
     primary.disabled = false;
-    if (estateSelect) estateSelect.disabled = !estateExamples.size;
+    for (const { select } of presetPickers) select.disabled = select.options.length <= 1;
     detail.hidden = false;
     applyExample(examples[0]);
   } catch {
@@ -310,10 +357,16 @@ async function loadCatalog() {
   }
 }
 
-estateSelect?.addEventListener("change", () => {
-  const example = estateExamples.get(estateSelect.value);
-  if (example) applyExample(example);
-});
+for (const { select } of presetPickers) {
+  select.addEventListener("change", () => {
+    const example = groupedExamples.get(select.value);
+    if (example) applyExample(example);
+  });
+}
+
+for (const button of portraitViewButtons) {
+  button.addEventListener("click", () => setPortraitView(button.dataset.portraitView));
+}
 
 seed.addEventListener("input", () => scheduleRender(180));
 randomize.addEventListener("click", () => {

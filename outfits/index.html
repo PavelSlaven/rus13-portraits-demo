@@ -24,21 +24,24 @@
 
     <div id="editor" class="editor">
       <section class="preview" aria-label="Предпросмотр персонажа">
+        <div class="portrait-views" role="group" aria-label="Вид портрета">
+          <button type="button" data-portrait-view="full" aria-controls="portrait" aria-pressed="true">В полный рост</button>
+          <button type="button" data-portrait-view="portrait" aria-controls="portrait" aria-pressed="false">По пояс</button>
+        </div>
         <div id="images">
           <figure>
-            <div class="portrait-frame">
-              <img id="portrait" src="./man-portrait.svg" width="320" height="440"
-                alt="Портрет персонажа анфас по пояс">
+            <div class="portrait-frame" data-view="full">
+              <img id="portrait" src="./man-full.svg" width="320" height="752"
+                alt="Персонаж анфас в полный рост">
             </div>
             <figcaption class="preview-row">
-              <span>Портрет по пояс</span>
-              <a id="save-portrait" class="download" href="./man-portrait.svg"
-                download="rus13-portrait.svg" aria-label="Скачать портрет по пояс в SVG">Скачать SVG</a>
+              <a id="save-portrait" class="download" href="./man-full.svg"
+                download="rus13-full.svg" aria-label="Скачать персонажа в полный рост в SVG">Скачать SVG</a>
             </figcaption>
           </figure>
           <figure class="preview-row card-row">
             <div class="card-frame">
-              <img id="card" src="./man-card.svg" width="32" height="32" alt="">
+              <img id="card" src="./man-card.svg" width="32" height="32" alt="Игровой портрет персонажа">
             </div>
             <figcaption>Карточка 32 × 32</figcaption>
             <a id="save-card" class="download" href="./man-card.svg"
@@ -52,6 +55,23 @@
         <section class="examples" aria-labelledby="examples-title">
           <h2 id="examples-title">Примеры</h2>
           <div id="examples" class="example-list"></div>
+          <details id="northwest-presets" class="outfit-archive">
+            <summary>Новгород и соседи</summary>
+            <div class="comparison-links">
+              <a href="./northwest-full-men.png">Мужские костюмы в полный рост</a>
+              <a href="./northwest-full-women.png">Женские костюмы в полный рост</a>
+              <a href="./northwest-full-armor.png">Доспехи в полный рост</a>
+              <a href="./northwest-men.png">Мужская одежда по пояс</a>
+              <a href="./northwest-women.png">Женская одежда по пояс</a>
+              <a href="./northwest-armor.png">Доспехи и шеломы по пояс</a>
+            </div>
+            <label class="field" for="northwest-examples">
+              <span>Примерить комплект</span>
+              <select id="northwest-examples" disabled>
+                <option value="">Выберите комплект</option>
+              </select>
+            </label>
+          </details>
           <details id="adult-estate-presets" class="outfit-archive">
             <summary>Взрослые комплекты по сословиям</summary>
             <div class="comparison-links">
