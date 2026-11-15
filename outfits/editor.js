@@ -24,7 +24,7 @@ const presetPickers = [
 ].filter(({ select }) => select);
 const groupedExamples = new Map();
 const artworkViews = ["full", "portrait", "card"];
-const outfitDetailFields = ["belt", "belt_pouch", "jewelry", "trousers", "leg_wraps", "footwear"];
+const outfitDetailFields = ["cloak", "belt", "belt_pouch", "jewelry", "trousers", "leg_wraps", "footwear"];
 const portraitLabels = {
   full: { alt: "Персонаж анфас в полный рост", download: "Скачать персонажа в полный рост в SVG" },
   portrait: { alt: "Портрет персонажа анфас по пояс", download: "Скачать портрет по пояс в SVG" },
@@ -149,6 +149,10 @@ function updateNotes(recipe) {
     }
     if (jewelryHidden && field === "jewelry" && select.value && select.value !== "none") {
       message = "Доспех закрывает украшение";
+    }
+    if (field === "cloak") {
+      const style = select.value || recipe?.equipment?.cloak;
+      message = catalog.cloak_coverage?.[style] ?? message;
     }
     note.textContent = message;
     note.hidden = !message;
