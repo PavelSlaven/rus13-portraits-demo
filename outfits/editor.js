@@ -28,7 +28,7 @@ const groups = [
   ["Нос", "nose_bridge nose_root nose_length nose_width nose_wings nose_tip nose_tip_height nostril_shape"],
   ["Рот и губы", "mouth_width mouth_height mouth_corners lip_volume upper_lip lower_lip lip_shape lip_border philtrum expression"],
   ["Причёска", "hair_style hair_texture hairline hair_density part hair_color graying"],
-  ["Борода и усы", "beard moustache"],
+  ["Борода и усы", "beard beard_growth moustache moustache_growth"],
 ];
 
 const controls = new Map();
@@ -59,7 +59,9 @@ function addField(container, kind, field) {
   select.name = field;
   select.id = `${kind}-${field}`;
   label.htmlFor = select.id;
-  select.append(new Option(kind === "appearance" ? "По seed" : "По умолчанию", ""));
+  let initialLabel = kind === "appearance" ? "По seed" : "По умолчанию";
+  if (field === "beard_growth" || field === "moustache_growth") initialLabel = "Полный рост (по умолчанию)";
+  select.append(new Option(initialLabel, ""));
   for (const [value, title] of Object.entries(definition.values)) {
     select.append(new Option(title, value));
   }
