@@ -24,7 +24,7 @@ const presetPickers = [
 ].filter(({ select }) => select);
 const groupedExamples = new Map();
 const artworkViews = ["full", "portrait", "card"];
-const outfitDetailFields = ["cloak", "belt", "belt_pouch", "jewelry", "trousers", "leg_wraps", "footwear"];
+const outfitDetailFields = ["cloak", "weapon", "shield", "belt", "belt_pouch", "jewelry", "trousers", "leg_wraps", "footwear"];
 const portraitLabels = {
   full: { alt: "Персонаж анфас в полный рост", download: "Скачать персонажа в полный рост в SVG" },
   portrait: { alt: "Портрет персонажа анфас по пояс", download: "Скачать портрет по пояс в SVG" },
@@ -139,6 +139,7 @@ function updateOptions() {
 
 function updateNotes(recipe) {
   const outfit = document.getElementById("equipment-outfit")?.value || recipe?.equipment?.outfit;
+  const cloak = document.getElementById("equipment-cloak")?.value || recipe?.equipment?.cloak;
   const jewelryHidden = catalog.jewelry_hidden_by?.includes(outfit);
   for (const [select, { kind, field, definition, note }] of controls) {
     const automatic = definition.values[recipe?.[kind]?.[field]];
@@ -151,8 +152,13 @@ function updateNotes(recipe) {
       message = "Доспех закрывает украшение";
     }
     if (field === "cloak") {
-      const style = select.value || recipe?.equipment?.cloak;
-      message = catalog.cloak_coverage?.[style] ?? message;
+      message = catalog.cloak_coverage?.[cloak] ?? message;
+    }
+    if ((field === "weapon" || field === "shield") && catalog.handheld_hidden_by?.[field]?.includes(cloak)) {
+      const equipment = select.value || recipe?.equipment?.[field];
+      if (equipment && equipment !== "auto" && equipment !== "none" && equipment !== "sheathed_sword") {
+        message = field === "weapon" ? "Плащ закрывает кисть и скрывает оружие" : "Плащ закрывает кисть и скрывает щит";
+      }
     }
     note.textContent = message;
     note.hidden = !message;
