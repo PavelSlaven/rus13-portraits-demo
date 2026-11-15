@@ -94,13 +94,17 @@ function outsideProfile(field, value) {
 }
 
 function updateOptions() {
+  const cast = document.getElementById("appearance-cast").value;
   for (const [select, { kind, field, definition }] of controls) {
     if (kind !== "appearance") continue;
     for (const option of select.options) {
       if (!option.value) continue;
+      const required = catalog.exclusive_traits?.[field]?.[option.value];
+      option.disabled = option.hidden = Boolean(required && required !== cast);
       const title = definition.values[option.value];
       option.textContent = outsideProfile(field, option.value) ? `${title} · вне автонабора` : title;
     }
+    if (select.selectedOptions[0]?.disabled) select.value = "";
   }
 }
 
@@ -193,7 +197,7 @@ function applyExample(example) {
   renderId += 1;
   pendingRender = null;
   sampleModes = {};
-  for (const flag of ["extended", "expanded_hair", "distinct_bases"]) {
+  for (const flag of ["extended", "expanded_hair", "distinct_bases", "cast_traits"]) {
     if (typeof example.payload[flag] === "boolean") sampleModes[flag] = example.payload[flag];
   }
   seed.value = example.payload.seed;
@@ -283,12 +287,13 @@ randomize.addEventListener("click", () => {
   scheduleRender();
 });
 editor.addEventListener("change", event => {
-  if (event.target === profile) updateOptions();
+  if (event.target === profile || event.target.id === "appearance-cast") updateOptions();
   if (event.target === profile || controls.has(event.target)) scheduleRender();
 });
 reset.addEventListener("click", () => {
   sampleModes = {};
   for (const select of controls.keys()) select.value = "";
+  updateOptions();
   scheduleRender();
 });
 retry.addEventListener("click", () => {

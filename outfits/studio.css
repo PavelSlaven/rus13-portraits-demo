@@ -78,6 +78,8 @@ h1 { margin: 0; font: 700 clamp(2rem, 4.8vw, 3.45rem) / 1.03 var(--serif); }
 .example-list button[aria-pressed="true"] { background: #60452f; border-color: #a9794e; color: #fff0d0; }
 .comparison-links { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 10px; font-size: .84rem; }
 .comparison-links a { color: var(--muted); text-underline-offset: .18em; }
+.outfit-archive { margin-top: 10px; font-size: .84rem; color: var(--muted); }
+.outfit-archive summary { width: fit-content; }
 .primary {
   margin: 0;
   min-width: 0;
