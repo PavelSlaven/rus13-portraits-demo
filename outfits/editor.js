@@ -95,13 +95,16 @@ function outsideProfile(field, value) {
 
 function updateOptions() {
   const cast = document.getElementById("appearance-cast").value;
+  const age = document.getElementById("appearance-age").value;
+  const childLabels = age === "child" ? {men: "Мальчик", women: "Девочка"} : {};
   for (const [select, { kind, field, definition }] of controls) {
     if (kind !== "appearance") continue;
     for (const option of select.options) {
       if (!option.value) continue;
       const required = catalog.exclusive_traits?.[field]?.[option.value];
-      option.disabled = option.hidden = Boolean(required && required !== cast);
-      const title = definition.values[option.value];
+      const wrongAge = catalog.age_restrictions?.[age]?.[field]?.includes(option.value);
+      option.disabled = option.hidden = Boolean(wrongAge || (required && required !== cast));
+      const title = (field === "cast" && childLabels[option.value]) || definition.values[option.value];
       option.textContent = outsideProfile(field, option.value) ? `${title} · вне автонабора` : title;
     }
     if (select.selectedOptions[0]?.disabled) select.value = "";
@@ -287,7 +290,7 @@ randomize.addEventListener("click", () => {
   scheduleRender();
 });
 editor.addEventListener("change", event => {
-  if (event.target === profile || event.target.id === "appearance-cast") updateOptions();
+  if (event.target === profile || ["appearance-cast", "appearance-age"].includes(event.target.id)) updateOptions();
   if (event.target === profile || controls.has(event.target)) scheduleRender();
 });
 reset.addEventListener("click", () => {
