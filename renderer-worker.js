@@ -1,0 +1,43 @@
+"use strict";
+
+const runtime = "https://cdn.jsdelivr.net/pyodide/v0.29.5/full/";
+let renderSvgPair;
+
+async function start() {
+  importScripts("./runtime/pyodide.js");
+  const [python, response] = await Promise.all([
+    loadPyodide({ indexURL: runtime }),
+    fetch("./engine.zip"),
+  ]);
+  if (!response.ok) throw new Error("Архив генератора недоступен.");
+
+  python.unpackArchive(await response.arrayBuffer(), "zip", { extractDir: "/rus13" });
+  renderSvgPair = python.runPython(`
+import json
+import sys
+
+sys.path.insert(0, "/rus13")
+from editor import render_payload
+
+def render_json(payload):
+    return json.dumps(render_payload(json.loads(payload)), ensure_ascii=False)
+
+render_json
+`);
+  self.postMessage({ kind: "ready" });
+}
+
+self.addEventListener("message", ({ data }) => {
+  try {
+    const result = JSON.parse(renderSvgPair(JSON.stringify(data.payload)));
+    self.postMessage({ kind: "rendered", id: data.id, result });
+  } catch (error) {
+    console.error(error);
+    self.postMessage({ kind: "render-error", id: data.id });
+  }
+});
+
+start().catch(error => {
+  console.error(error);
+  self.postMessage({ kind: "startup-error" });
+});

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Соберите векторный портрет персонажа Руси XIII века и скачайте игровую карточку 32 × 32.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#181614">
+  <title>Rus13 · Генератор персонажей</title>
+  <link rel="icon" href="./mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./studio.css">
+  <script src="./editor.js" defer></script>
+</head>
+<body>
+  <main>
+    <header class="masthead">
+      <div class="project">
+        <img src="./mark.svg" width="32" height="32" alt="">
+        <span>Rus13</span>
+      </div>
+      <h1>Генератор персонажей</h1>
+      <p>Собери портрет жителя Руси XIII века и скачай игровую карточку.</p>
+    </header>
+
+    <div id="editor" class="editor">
+      <section class="preview" aria-label="Предпросмотр персонажа">
+        <div id="images">
+          <figure>
+            <div class="portrait-frame">
+              <img id="portrait" src="./town-portrait.svg" width="320" height="440"
+                alt="Портрет персонажа анфас по пояс">
+            </div>
+            <figcaption class="preview-row">
+              <span>Портрет по пояс</span>
+              <a id="save-portrait" class="download" href="./town-portrait.svg"
+                download="rus13-portrait.svg" aria-label="Скачать портрет по пояс в SVG">Скачать SVG</a>
+            </figcaption>
+          </figure>
+          <figure class="preview-row card-row">
+            <div class="card-frame">
+              <img id="card" src="./town-card.svg" width="32" height="32" alt="">
+            </div>
+            <figcaption>Карточка 32 × 32</figcaption>
+            <a id="save-card" class="download" href="./town-card.svg"
+              download="rus13-card.svg" aria-label="Скачать карточку в SVG">Скачать SVG</a>
+          </figure>
+        </div>
+        <noscript>Для работы генератора нужен JavaScript.</noscript>
+      </section>
+
+      <div class="settings">
+        <section class="examples" aria-labelledby="examples-title">
+          <h2 id="examples-title">Примеры</h2>
+          <div id="examples" class="example-list"></div>
+        </section>
+
+        <fieldset id="primary" class="primary" disabled>
+          <legend>Персонаж</legend>
+          <div id="primary-fields" class="fields">
+            <div class="field source">
+              <label for="seed">Seed</label>
+              <div class="seed-controls">
+                <input id="seed" type="text" value="novgorod-05" maxlength="256" autocomplete="off" spellcheck="false" dir="auto">
+                <button id="randomize" type="button" title="Новый seed" aria-label="Новый seed">
+                  <svg viewBox="0 0 20 20" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <rect x="2.75" y="2.75" width="14.5" height="14.5" rx="2.75"/>
+                    <circle cx="6.5" cy="6.5" r=".85" fill="currentColor" stroke="none"/>
+                    <circle cx="10" cy="10" r=".85" fill="currentColor" stroke="none"/>
+                    <circle cx="13.5" cy="13.5" r=".85" fill="currentColor" stroke="none"/>
+                  </svg>
+                  Новый
+                </button>
+              </div>
+            </div>
+            <label class="field source" for="profile">
+              <span>Профиль внешности</span>
+              <select id="profile"></select>
+            </label>
+          </div>
+          <button id="reset" class="reset" type="button">Сбросить ручные правки</button>
+        </fieldset>
+
+        <div class="feedback">
+          <p id="status" role="status">Загружаем генератор…</p>
+          <button id="retry" type="button" hidden>Повторить</button>
+        </div>
+
+        <section id="detail" class="detail" aria-label="Детали внешности и экипировки" hidden></section>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
