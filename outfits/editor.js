@@ -95,7 +95,7 @@ function outsideProfile(field, value) {
 
 function updateOptions() {
   const cast = document.getElementById("appearance-cast").value;
-  const age = document.getElementById("appearance-age").value;
+  const age = document.getElementById("appearance-age").value || "adult";
   const childLabels = age === "child" ? {men: "Мальчик", women: "Девочка"} : {};
   for (const [select, { kind, field, definition }] of controls) {
     if (kind !== "appearance") continue;
