@@ -80,6 +80,7 @@ h1 { margin: 0; font: 700 clamp(2rem, 4.8vw, 3.45rem) / 1.03 var(--serif); }
 .comparison-links a { color: var(--muted); text-underline-offset: .18em; }
 .outfit-archive { margin-top: 10px; font-size: .84rem; color: var(--muted); }
 .outfit-archive summary { width: fit-content; }
+.outfit-archive .field { margin-top: 10px; }
 .primary {
   margin: 0;
   min-width: 0;

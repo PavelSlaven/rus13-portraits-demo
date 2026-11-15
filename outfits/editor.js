@@ -12,6 +12,8 @@ const retry = document.querySelector("#retry");
 const status = document.querySelector("#status");
 const images = document.querySelector("#images");
 const exampleList = document.querySelector("#examples");
+const estateSelect = document.querySelector("#adult-estates");
+const estateExamples = new Map();
 const artwork = ["portrait", "card"].map(view => ({
   view,
   image: document.getElementById(view),
@@ -181,7 +183,7 @@ function startRenderer() {
       if (pendingRender) {
         worker.postMessage(pendingRender);
         pendingRender = null;
-      } else if (exampleList.querySelector('[aria-pressed="true"]')) {
+      } else if (estateSelect?.value || exampleList.querySelector('[aria-pressed="true"]')) {
         setStatus("");
       }
       return;
@@ -199,6 +201,7 @@ function startRenderer() {
 }
 
 function setActiveExample(active) {
+  if (estateSelect) estateSelect.value = estateExamples.has(active) ? active : "";
   for (const button of exampleList.children) {
     button.setAttribute("aria-pressed", String(button.dataset.example === active));
   }
@@ -276,7 +279,20 @@ async function loadCatalog() {
     addGroup("Другие черты", "appearance", Object.keys(catalog.appearance).filter(field => !assigned.has(field)));
     addGroup("Экипировка и фон", "equipment", Object.keys(catalog.equipment).filter(field => !assigned.has(field)));
 
+    const estateGroups = new Map();
     for (const example of examples) {
+      if (example.estate) {
+        if (!estateSelect) continue;
+        if (!estateGroups.has(example.estate)) {
+          const group = document.createElement("optgroup");
+          group.label = example.estate;
+          estateGroups.set(example.estate, group);
+          estateSelect.append(group);
+        }
+        estateGroups.get(example.estate).append(new Option(example.label, example.id));
+        estateExamples.set(example.id, example);
+        continue;
+      }
       const button = document.createElement("button");
       button.type = "button";
       button.textContent = example.label;
@@ -286,12 +302,18 @@ async function loadCatalog() {
     }
 
     primary.disabled = false;
+    if (estateSelect) estateSelect.disabled = !estateExamples.size;
     detail.hidden = false;
     applyExample(examples[0]);
   } catch {
     setStatus("Не удалось загрузить настройки редактора.", { error: true });
   }
 }
+
+estateSelect?.addEventListener("change", () => {
+  const example = estateExamples.get(estateSelect.value);
+  if (example) applyExample(example);
+});
 
 seed.addEventListener("input", () => scheduleRender(180));
 randomize.addEventListener("click", () => {
