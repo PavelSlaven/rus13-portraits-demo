@@ -24,7 +24,7 @@ const presetPickers = [
 ].filter(({ select }) => select);
 const groupedExamples = new Map();
 const artworkViews = ["full", "portrait", "card"];
-const legwearFields = ["trousers", "leg_wraps", "footwear"];
+const outfitDetailFields = ["belt", "belt_pouch", "jewelry", "trousers", "leg_wraps", "footwear"];
 const portraitLabels = {
   full: { alt: "Персонаж анфас в полный рост", download: "Скачать персонажа в полный рост в SVG" },
   portrait: { alt: "Портрет персонажа анфас по пояс", download: "Скачать портрет по пояс в SVG" },
@@ -76,11 +76,11 @@ function addField(container, kind, field) {
   let initialLabel = kind === "appearance" ? "По seed" : "По умолчанию";
   if (field === "beard_growth" || field === "moustache_growth") initialLabel = "Полный рост (по умолчанию)";
   if (field === "hair_length") initialLabel = "По причёске";
-  const isLegwear = kind === "equipment" && legwearFields.includes(field);
-  if (isLegwear) initialLabel = "По комплекту";
+  const usesOutfitDefault = kind === "equipment" && outfitDetailFields.includes(field);
+  if (usesOutfitDefault) initialLabel = "По комплекту";
   select.append(new Option(initialLabel, ""));
   for (const [value, title] of Object.entries(definition.values)) {
-    if (isLegwear && value === "auto") continue;
+    if (usesOutfitDefault && value === "auto") continue;
     select.append(new Option(title, value));
   }
 
@@ -138,12 +138,17 @@ function updateOptions() {
 }
 
 function updateNotes(recipe) {
+  const outfit = document.getElementById("equipment-outfit")?.value || recipe?.equipment?.outfit;
+  const jewelryHidden = catalog.jewelry_hidden_by?.includes(outfit);
   for (const [select, { kind, field, definition, note }] of controls) {
     const automatic = definition.values[recipe?.[kind]?.[field]];
     let message = "";
     if (!select.value && automatic) message = automatic;
     if (kind === "appearance" && select.value && outsideProfile(field, select.value)) {
       message = "Вне автонабора профиля";
+    }
+    if (jewelryHidden && field === "jewelry" && select.value && select.value !== "none") {
+      message = "Доспех закрывает украшение";
     }
     note.textContent = message;
     note.hidden = !message;
@@ -267,8 +272,8 @@ function applyExample(example) {
   seed.value = example.payload.seed;
   profile.value = example.payload.profile;
   for (const [select, { kind, field }] of controls) {
-    const value = example.payload[kind][field];
-    select.value = kind === "equipment" && legwearFields.includes(field) && value === "auto" ? "" : value ?? "";
+    const value = example.payload[kind]?.[field];
+    select.value = kind === "equipment" && outfitDetailFields.includes(field) && value === "auto" ? "" : value ?? "";
   }
   setActiveExample(example.id);
   updateOptions();
@@ -321,7 +326,7 @@ async function loadCatalog() {
     catalog = data;
 
     for (const field of ["cast", "age", "body"]) addField(primaryFields, "appearance", field);
-    for (const field of ["outfit", ...legwearFields, "headgear"]) addField(primaryFields, "equipment", field);
+    for (const field of ["outfit", ...outfitDetailFields, "headgear"]) addField(primaryFields, "equipment", field);
     for (const [title, fields] of groups) addGroup(title, "appearance", fields.split(" "));
 
     const assigned = new Set(Array.from(controls.values(), ({ field }) => field));
@@ -382,7 +387,7 @@ editor.addEventListener("change", event => {
   if (event.target === profile || ["appearance-cast", "appearance-age", "appearance-hair_length"].includes(event.target.id)) {
     updateOptions();
   }
-  if (legwearFields.includes(controls.get(event.target)?.field)) setPortraitView("full");
+  if (outfitDetailFields.includes(controls.get(event.target)?.field)) setPortraitView("full");
   if (event.target === profile || controls.has(event.target)) scheduleRender();
 });
 reset.addEventListener("click", () => {

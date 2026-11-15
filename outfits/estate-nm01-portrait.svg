@@ -51,8 +51,6 @@
     </g>
     <g id="shirt-setting">
       <rect width="320" height="440" fill="url(#umber)" />
-      <path d="M60 187C49 137 74 84 122 63c51-23 107-8 139 35 30 40 23 101-1 135-24 36-65 54-110 49-44-4-79-42-90-95Z" fill="#c2a077" />
-      <path d="M53 178C47 128 84 78 129 61m-65 160c22 43 65 68 103 66m82-187c19 20 27 48 24 72" fill="none" stroke="#c6a578" stroke-width="1.3" opacity=".65" />
       <path d="M50 217q24 8 64 1l-15 7-56 6m176-90q39-13 70-5l-26 4 28 2-64 6" fill="#856c54" opacity=".5" />
       <use xlink:href="#firs" style="color:#342827" opacity=".52" transform="translate(-26 8)" />
       <use xlink:href="#firs" style="color:#413128" opacity=".58" transform="translate(340 101) scale(-1 .81)" />
@@ -63,8 +61,6 @@
     </g>
     <g id="armor-setting">
       <rect width="320" height="440" fill="url(#ash)" />
-      <path d="M48 164c1-51 34-91 83-101 48-11 98 1 130 36 37 39 36 93 8 136-20 30-75 59-121 49-56-12-101-60-100-120Z" fill="#a5a48a" />
-      <path d="M54 144q8-48 53-66m108 5c39 15 61 39 68 68m-44 107q-41 31-93 30" fill="none" stroke="#bec0a0" stroke-width="1.2" opacity=".56" />
       <path d="M42 173q49-4 68 3l-43 6 25 3-49 4m151 35q47 10 104-6l-26 14-62 8Z" fill="#707764" opacity=".48" />
       <use xlink:href="#firs" style="color:#27312c" opacity=".64" transform="translate(-36 30)" />
       <use xlink:href="#firs" style="color:#303833" opacity=".75" transform="translate(324 45) scale(-.86 1.03)" />
@@ -75,8 +71,6 @@
     </g>
     <g id="woman-setting">
       <rect width="320" height="440" fill="url(#rose)" />
-      <path d="M56 160C60 107 95 74 142 65c47-9 100 15 121 50 23 39 19 90-12 126-31 39-73 55-115 44-52-13-85-74-80-125Z" fill="#b18b83" />
-      <path d="M61 126c15-36 40-55 84-63m97 38c27 25 36 61 29 98m-201 25q14 29 42 47" fill="none" stroke="#d0a69a" stroke-width="1.2" opacity=".58" />
       <path d="M44 235q40-4 76-1l-20 6-36 2 19 3-44 5m183-50q35 3 60-3l-24 9-31 2" fill="#775d65" opacity=".6" />
       <use xlink:href="#firs" style="color:#3b2b34" opacity=".58" transform="translate(-20 84) scale(.86 .91)" />
       <use xlink:href="#firs" style="color:#3d2e39" opacity=".68" transform="translate(327 54) scale(-.85 .98)" />
