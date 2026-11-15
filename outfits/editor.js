@@ -27,7 +27,7 @@ const groups = [
   ["Брови", "brow_shape brow_weight brow_height brow_length brow_gap brow_tail"],
   ["Нос", "nose_bridge nose_root nose_length nose_width nose_wings nose_tip nose_tip_height nostril_shape"],
   ["Рот и губы", "mouth_width mouth_height mouth_corners lip_volume upper_lip lower_lip lip_shape lip_border philtrum expression"],
-  ["Причёска", "hair_style hair_texture hairline hair_density part hair_color graying"],
+  ["Причёска", "hair_length hair_style hair_texture hairline hair_density part hair_color graying"],
   ["Борода и усы", "beard beard_growth moustache moustache_growth"],
 ];
 
@@ -61,6 +61,7 @@ function addField(container, kind, field) {
   label.htmlFor = select.id;
   let initialLabel = kind === "appearance" ? "По seed" : "По умолчанию";
   if (field === "beard_growth" || field === "moustache_growth") initialLabel = "Полный рост (по умолчанию)";
+  if (field === "hair_length") initialLabel = "По причёске";
   select.append(new Option(initialLabel, ""));
   for (const [value, title] of Object.entries(definition.values)) {
     select.append(new Option(title, value));
@@ -98,6 +99,8 @@ function outsideProfile(field, value) {
 function updateOptions() {
   const cast = document.getElementById("appearance-cast").value;
   const age = document.getElementById("appearance-age").value || "adult";
+  const length = document.getElementById("appearance-hair_length")?.value ?? "";
+  const hairstyles = catalog.hair_styles_by_length?.[length || "default"];
   const childLabels = age === "child" ? {men: "Мальчик", women: "Девочка"} : {};
   for (const [select, { kind, field, definition }] of controls) {
     if (kind !== "appearance") continue;
@@ -105,7 +108,8 @@ function updateOptions() {
       if (!option.value) continue;
       const required = catalog.exclusive_traits?.[field]?.[option.value];
       const wrongAge = catalog.age_restrictions?.[age]?.[field]?.includes(option.value);
-      option.disabled = option.hidden = Boolean(wrongAge || (required && required !== cast));
+      const wrongLength = field === "hair_style" && hairstyles && !hairstyles.includes(option.value);
+      option.disabled = option.hidden = Boolean(wrongAge || wrongLength || (required && required !== cast));
       const title = (field === "cast" && childLabels[option.value]) || definition.values[option.value];
       option.textContent = outsideProfile(field, option.value) ? `${title} · вне автонабора` : title;
     }
@@ -292,7 +296,9 @@ randomize.addEventListener("click", () => {
   scheduleRender();
 });
 editor.addEventListener("change", event => {
-  if (event.target === profile || ["appearance-cast", "appearance-age"].includes(event.target.id)) updateOptions();
+  if (event.target === profile || ["appearance-cast", "appearance-age", "appearance-hair_length"].includes(event.target.id)) {
+    updateOptions();
+  }
   if (event.target === profile || controls.has(event.target)) scheduleRender();
 });
 reset.addEventListener("click", () => {
