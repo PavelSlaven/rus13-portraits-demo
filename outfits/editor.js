@@ -103,15 +103,18 @@ function updateOptions() {
   const hairstyles = catalog.hair_styles_by_length?.[length || "default"];
   const childLabels = age === "child" ? {men: "Мальчик", women: "Девочка"} : {};
   for (const [select, { kind, field, definition }] of controls) {
-    if (kind !== "appearance") continue;
+    const appearanceField = kind === "appearance";
+    const castRestrictions = appearanceField ? catalog.exclusive_traits?.[field] : catalog.equipment_casts?.[field];
+    if (!appearanceField && !castRestrictions) continue;
     for (const option of select.options) {
       if (!option.value) continue;
-      const required = catalog.exclusive_traits?.[field]?.[option.value];
-      const wrongAge = catalog.age_restrictions?.[age]?.[field]?.includes(option.value);
+      const required = castRestrictions?.[option.value];
+      const wrongAge = appearanceField ? catalog.age_restrictions?.[age]?.[field]?.includes(option.value)
+                                       : age === "child" && Boolean(required);
       const wrongLength = field === "hair_style" && hairstyles && !hairstyles.includes(option.value);
       option.disabled = option.hidden = Boolean(wrongAge || wrongLength || (required && required !== cast));
       const title = (field === "cast" && childLabels[option.value]) || definition.values[option.value];
-      option.textContent = outsideProfile(field, option.value) ? `${title} · вне автонабора` : title;
+      option.textContent = appearanceField && outsideProfile(field, option.value) ? `${title} · вне автонабора` : title;
     }
     if (select.selectedOptions[0]?.disabled) select.value = "";
   }
