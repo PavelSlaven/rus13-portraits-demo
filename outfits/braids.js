@@ -16,7 +16,7 @@ const views = {
   },
   facial: {
     title: "Бороды и усы с бармицей и без", assetPrefix: "rus13-facial-hair",
-    dataFile: "./facial-hair-fit.json?v=moustache-variety", link: "#facial-hair-fit-link",
+    dataFile: "./facial-hair-fit.json?v=moustache-lip-fit", link: "#facial-hair-fit-link",
     styleLabel: "Бороды, усы и рост", baseLabel: "Вариант",
   },
   eyes: {
@@ -73,7 +73,7 @@ function showArtwork(target, data, name) {
 }
 
 function startWorker() {
-  worker = new Worker("./renderer-worker.js?v=moustache-variety", { name: "Галерея Rus13" });
+  worker = new Worker("./renderer-worker.js?v=moustache-lip-fit", { name: "Галерея Rus13" });
   worker.addEventListener("error", fail);
   worker.addEventListener("message", ({ data }) => {
     if (data.kind === "startup-error") {
