@@ -6,6 +6,9 @@ const primaryFields = document.querySelector("#primary-fields");
 const detail = document.querySelector("#detail");
 const seed = document.querySelector("#seed");
 const profile = document.querySelector("#profile");
+const profileNote = document.querySelector("#profile-note");
+const estate = document.querySelector("#estate");
+const estateNote = document.querySelector("#estate-note");
 const randomize = document.querySelector("#randomize");
 const reset = document.querySelector("#reset");
 const retry = document.querySelector("#retry");
@@ -51,6 +54,8 @@ const groups = [
 
 const controls = new Map();
 let catalog;
+let lastRecipe;
+let presetControls;
 let timer;
 let renderId = 0;
 let renderer;
@@ -81,20 +86,11 @@ function addField(container, kind, field) {
   select.name = field;
   select.id = `${kind}-${field}`;
   label.htmlFor = select.id;
-  let initialLabel = kind === "appearance" ? "По seed" : "По умолчанию";
-  if (field === "beard_growth" || field === "moustache_growth") initialLabel = "Полный рост (по умолчанию)";
-  if (field === "hair_length") initialLabel = "По причёске";
-  const usesOutfitDefault = kind === "equipment" && outfitDetailFields.includes(field);
-  if (usesOutfitDefault) initialLabel = "По комплекту";
-  if (field === "carry") initialLabel = "Походное";
-  if (field === "shield_carry") initialLabel = "В руке";
-  select.append(new Option(initialLabel, ""));
+  select.append(new Option("По seed", ""));
   const optionGroups = field === "weapon" ? catalog.weapon_groups ?? {} : {};
   const groupedValues = new Set(Object.values(optionGroups).flat());
   for (const [value, title] of Object.entries(definition.values)) {
-    if (field === "carry" && value === "carried") continue;
-    if (field === "shield_carry" && value === "held") continue;
-    if ((usesOutfitDefault && value === "auto") || groupedValues.has(value)) continue;
+    if (value === "auto" || groupedValues.has(value)) continue;
     select.append(new Option(title, value));
   }
   for (const [title, values] of Object.entries(optionGroups)) {
@@ -129,40 +125,67 @@ function addGroup(title, kind, fields) {
 }
 
 function outsideProfile(field, value) {
+  const selected = profile.value || lastRecipe?.profile;
   const memberships = catalog.memberships?.[field]?.[value];
-  return profile.value !== "free" && Array.isArray(memberships) && !memberships.includes(profile.value);
+  return selected && selected !== "free" && Array.isArray(memberships) && !memberships.includes(selected);
+}
+
+function outsideEstate(field, value) {
+  const selected = estate.value || lastRecipe?.estate;
+  const memberships = catalog.equipment_estates?.[field]?.[value];
+  return selected && Array.isArray(memberships) && !memberships.includes(selected);
 }
 
 function updateOptions() {
   const cast = document.getElementById("appearance-cast").value;
-  const age = document.getElementById("appearance-age").value || "adult";
-  const length = document.getElementById("appearance-hair_length")?.value ?? "";
-  const hairstyles = catalog.hair_styles_by_length?.[length || "default"];
-  const childLabels = age === "child" ? {men: "Мальчик", women: "Девочка"} : {};
-  const restrictions = catalog.age_restrictions?.[age] ?? {};
-  for (const [select, { kind, field, definition, wrapper }] of controls) {
-    const appearanceField = kind === "appearance";
-    const castRestrictions = appearanceField ? catalog.exclusive_traits?.[field] : catalog.equipment_casts?.[field];
-    const ageRestrictions = restrictions[field] ?? [];
-    const hidden = !appearanceField && ageRestrictions.length > 0
-      && Object.keys(definition.values).every(value => value === "auto" || value === "none"
-        || ageRestrictions.includes(value));
+  const age = document.getElementById("appearance-age").value;
+  const length = document.getElementById("appearance-hair_length").value;
+  const hairstyles = catalog.hair_styles_by_length?.[length];
+  const visibleAge = age || lastRecipe?.appearance?.age;
+  const childLabels = visibleAge === "child" ? { men: "Мальчик", women: "Девочка" } : {};
+  const bases = (cast ? [cast] : Object.keys(catalog.appearance.cast.values)).flatMap(base =>
+    (age ? [age] : Object.keys(catalog.appearance.age.values)).map(years => ({ base, years })));
+
+  function fits({ kind, field }, value, { base, years }) {
+    const groups = kind === "appearance" ? catalog.exclusive_traits : catalog.equipment_casts;
+    const required = groups?.[field]?.[value];
+    return (!required || required === base)
+      && !catalog.age_restrictions?.[years]?.[field]?.includes(value)
+      && (field !== "hair_style" || !hairstyles || hairstyles.includes(value));
+  }
+
+  for (const [select, control] of controls) {
+    if (select.value && !bases.some(base => fits(control, select.value, base))) select.value = "";
+  }
+  const pinned = Array.from(controls).filter(([select]) => select.value);
+  for (const [select, control] of controls) {
+    const { kind, field, definition, wrapper } = control;
+    const restricted = catalog.age_restrictions?.[visibleAge]?.[field] ?? [];
+    const hidden = kind === "equipment" && restricted.length > 0
+      && Object.keys(definition.values).every(value => value === "auto" || value === "none" || restricted.includes(value));
     wrapper.hidden = select.disabled = hidden;
-    if (hidden) continue;
+    const possible = bases.filter(base => pinned.every(([other, entry]) =>
+      other === select || fits(entry, other.value, base)));
     for (const option of select.options) {
       if (!option.value) continue;
-      const required = castRestrictions?.[option.value];
-      const wrongAge = ageRestrictions.includes(option.value);
-      const wrongLength = field === "hair_style" && hairstyles && !hairstyles.includes(option.value);
-      option.disabled = option.hidden = Boolean(wrongAge || wrongLength || (required && required !== cast));
+      const baseControl = field === "cast" || field === "age" || field === "hair_length";
+      option.disabled = option.hidden = !baseControl && !possible.some(base => fits(control, option.value, base));
       const title = (field === "cast" && childLabels[option.value]) || definition.values[option.value];
-      option.textContent = appearanceField && outsideProfile(field, option.value) ? `${title} · вне автонабора` : title;
+      const outside = kind === "appearance" ? outsideProfile(field, option.value) : outsideEstate(field, option.value);
+      const label = kind === "appearance" ? "вне автонабора" : "вне сословного набора";
+      option.textContent = outside ? title + " · " + label : title;
     }
-    if (select.selectedOptions[0]?.disabled) select.value = "";
   }
 }
 
 function updateNotes(recipe) {
+  for (const [select, names, note, value] of [
+    [profile, catalog.profiles, profileNote, recipe?.profile],
+    [estate, catalog.estates, estateNote, recipe?.estate],
+  ]) {
+    note.textContent = select.value ? "" : names[value] ?? "";
+    note.hidden = !note.textContent;
+  }
   const gear = recipe?.equipment ?? {};
   const { outfit, cloak, headgear, bow = "none", bow_case: bowCase, carry } = gear;
   const carried = carry !== "held";
@@ -172,7 +195,6 @@ function updateNotes(recipe) {
   for (const [select, { kind, field, definition, note }] of controls) {
     const automatic = definition.values[recipe?.[kind]?.[field]];
     let message = "";
-    if (!select.value && automatic) message = automatic;
     if (kind === "appearance" && select.value && outsideProfile(field, select.value)) {
       message = "Вне автонабора профиля";
     }
@@ -204,13 +226,17 @@ function updateNotes(recipe) {
     if (kind === "equipment" && field === "bow_case" && cased && bowCase === undefined) {
       message = "Кожаное налучье с луком";
     }
-    note.textContent = message;
-    note.hidden = !message;
+    const estateWarning = kind === "equipment" && select.value && outsideEstate(field, select.value)
+      ? "Вне сословного набора" : "";
+    note.textContent = [!select.value && automatic, message, estateWarning].filter(Boolean).join(" · ");
+    note.hidden = !note.textContent;
   }
 }
 
 function selection() {
-  const payload = { ...sampleModes, seed: seed.value, profile: profile.value, appearance: {}, equipment: {} };
+  const payload = { ...sampleModes, seed: seed.value, generate: !presetControls, appearance: {}, equipment: {} };
+  if (profile.value) payload.profile = profile.value;
+  if (estate.value) payload.estate = estate.value;
   if (presetAccessory) payload.equipment.accessory = presetAccessory;
   for (const [select, { kind, field }] of controls) {
     if (select.value && !select.disabled) payload[kind][field] = select.value;
@@ -298,9 +324,11 @@ function startRenderer() {
     }
     if (data.id !== renderId) return;
     try {
-      if (data.kind !== "rendered") throw new Error("Проверьте настройки и попробуйте снова.");
+      if (data.kind !== "rendered") throw new Error(data.error || "Проверьте настройки и попробуйте снова.");
       showArtwork(data.result);
-      updateNotes(data.result.recipe);
+      lastRecipe = data.result.recipe;
+      updateOptions();
+      updateNotes(lastRecipe);
       setStatus("Портрет обновлён.");
     } catch (error) {
       setStatus(`Не удалось построить портрет. ${error.message}`, { error: true });
@@ -326,17 +354,17 @@ function applyExample(example) {
     if (typeof example.payload[flag] === "boolean") sampleModes[flag] = example.payload[flag];
   }
   seed.value = example.payload.seed;
-  profile.value = example.payload.profile;
+  profile.value = example.payload.profile ?? catalog.default_profile;
+  estate.value = "";
+  presetControls = new Set([profile, estate, ...controls.keys()]);
   for (const [select, { kind, field }] of controls) {
     const value = example.payload[kind]?.[field];
-    const implicit = kind === "equipment"
-      && ((outfitDetailFields.includes(field) && value === "auto") || (field === "carry" && value === "carried")
-        || (field === "shield_carry" && value === "held"));
-    select.value = implicit ? "" : value ?? "";
+    select.value = value === "auto" ? "" : value ?? "";
   }
   setActiveExample(example.id);
+  lastRecipe = example.recipe;
   updateOptions();
-  updateNotes(example.recipe);
+  updateNotes(lastRecipe);
   replaceArtwork(exampleArtwork(example.id));
   setStatus(ready ? "" : "Загружаем генератор…", { busy: !ready });
   try {
@@ -380,8 +408,10 @@ async function loadCatalog() {
     const response = await fetch("./studio.json");
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const { catalog: data, examples } = await response.json();
+    profile.replaceChildren(new Option("По seed", ""));
     for (const [id, label] of Object.entries(data.profiles)) profile.append(new Option(label, id));
-    profile.value = data.default_profile;
+    estate.replaceChildren(new Option("По seed", ""));
+    for (const [id, label] of Object.entries(data.estates)) estate.append(new Option(label, id));
     catalog = data;
 
     for (const field of ["cast", "age", "body"]) addField(primaryFields, "appearance", field);
@@ -420,7 +450,8 @@ async function loadCatalog() {
     primary.disabled = false;
     for (const { select } of presetPickers) select.disabled = select.options.length <= 1;
     detail.hidden = false;
-    applyExample(examples[0]);
+    updateOptions();
+    scheduleRender();
   } catch {
     setStatus("Не удалось загрузить настройки редактора.", { error: true });
   }
@@ -437,22 +468,41 @@ for (const button of portraitViewButtons) {
   button.addEventListener("click", () => setPortraitView(button.dataset.portraitView));
 }
 
-seed.addEventListener("input", () => scheduleRender(180));
+function useAutomatic(changed) {
+  if (!presetControls) return;
+  for (const select of presetControls) {
+    if (select !== changed) select.value = "";
+  }
+  presetControls = undefined;
+  presetAccessory = undefined;
+  sampleModes = {};
+}
+
+function reseed(delay = 0) {
+  useAutomatic();
+  updateOptions();
+  scheduleRender(delay);
+}
+
+seed.addEventListener("input", () => reseed(180));
 randomize.addEventListener("click", () => {
-  seed.value = `rus13-${crypto.getRandomValues(new Uint32Array(1))[0].toString(36)}`;
-  scheduleRender();
+  seed.value = "rus13-" + Array.from(crypto.getRandomValues(new Uint32Array(2)), part => part.toString(36)).join("-");
+  reseed();
 });
 editor.addEventListener("change", event => {
-  if (event.target === profile || ["appearance-cast", "appearance-age", "appearance-hair_length"].includes(event.target.id)) {
-    updateOptions();
-  }
-  if (outfitDetailFields.includes(controls.get(event.target)?.field)) setPortraitView("full");
-  if (event.target === profile || controls.has(event.target)) scheduleRender();
+  const target = event.target;
+  const control = controls.get(target);
+  if (!control && target !== profile && target !== estate) return;
+  if (target === profile || target === estate) useAutomatic(target);
+  else presetControls?.delete(target);
+  updateOptions();
+  if (outfitDetailFields.includes(control?.field)) setPortraitView("full");
+  scheduleRender();
 });
 reset.addEventListener("click", () => {
-  sampleModes = {};
-  presetAccessory = undefined;
-  for (const select of controls.keys()) select.value = "";
+  useAutomatic();
+  for (const select of [profile, estate, ...controls.keys()]) select.value = "";
+  lastRecipe = undefined;
   updateOptions();
   scheduleRender();
 });

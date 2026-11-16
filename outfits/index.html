@@ -135,7 +135,7 @@
             </label>
           </details>
           <details id="adult-estate-presets" class="outfit-archive">
-            <summary>Взрослые комплекты по сословиям</summary>
+            <summary>Взрослые комплекты по достатку</summary>
             <div class="comparison-links">
               <a href="./adult-estates-men.png">Мужские комплекты</a>
               <a href="./adult-estates-women.png">Женские комплекты</a>
@@ -209,13 +209,19 @@
                     <circle cx="10" cy="10" r=".85" fill="currentColor" stroke="none"/>
                     <circle cx="13.5" cy="13.5" r=".85" fill="currentColor" stroke="none"/>
                   </svg>
-                  Новый
+                  Новый seed
                 </button>
               </div>
             </div>
             <label class="field source" for="profile">
               <span>Профиль внешности</span>
-              <select id="profile"></select>
+              <select id="profile" aria-describedby="profile-note"></select>
+              <small id="profile-note" hidden></small>
+            </label>
+            <label class="field source" for="estate">
+              <span>Сословие</span>
+              <select id="estate" aria-describedby="estate-note"></select>
+              <small id="estate-note" hidden></small>
             </label>
           </div>
           <button id="reset" class="reset" type="button">Сбросить ручные правки</button>
