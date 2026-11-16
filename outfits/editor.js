@@ -318,7 +318,7 @@ function setPortraitView(view) {
 
 function startRenderer() {
   if (renderer) return;
-  const worker = new Worker("./renderer-worker.js?v=waist-crop", { name: "Rus13" });
+  const worker = new Worker("./renderer-worker.js?v=grooming-fit", { name: "Rus13" });
   renderer = worker;
   function fail() {
     worker.terminate();
@@ -426,7 +426,7 @@ function scheduleRender(delay = 0) {
 async function loadCatalog() {
   setStatus("Загружаем редактор…", { busy: true });
   try {
-    const response = await fetch("./studio.json?v=cultural-wardrobes");
+    const response = await fetch("./studio.json?v=grooming-fit");
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const { catalog: data, examples } = await response.json();
     profile.replaceChildren(new Option("По seed", ""));
