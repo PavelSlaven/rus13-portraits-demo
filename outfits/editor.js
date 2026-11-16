@@ -21,6 +21,7 @@ const exampleList = document.querySelector("#examples");
 const presetPickers = [
   { field: "estate", select: document.querySelector("#adult-estates") },
   { field: "region", select: document.querySelector("#northwest-examples") },
+  { field: "weapon_region", select: document.querySelector("#eurasian-weapon-examples") },
 ].filter(({ select }) => select);
 const groupedExamples = new Map();
 const artworkViews = ["full", "portrait", "card"];
@@ -29,7 +30,6 @@ const outfitDetailFields = [
   "belt", "belt_pouch", "jewelry", "trousers", "leg_wraps", "footwear",
 ];
 const handheldNames = { weapon: "оружие", shield: "щит", bow: "лук" };
-const heldWeapons = ["sword", "axe", "spear"];
 const portraitLabels = {
   full: { alt: "Персонаж анфас в полный рост", download: "Скачать персонажа в полный рост в SVG" },
   portrait: { alt: "Портрет персонажа анфас по пояс", download: "Скачать портрет по пояс в SVG" },
@@ -84,9 +84,17 @@ function addField(container, kind, field) {
   const usesOutfitDefault = kind === "equipment" && outfitDetailFields.includes(field);
   if (usesOutfitDefault) initialLabel = "По комплекту";
   select.append(new Option(initialLabel, ""));
+  const optionGroups = field === "weapon" ? catalog.weapon_groups ?? {} : {};
+  const groupedValues = new Set(Object.values(optionGroups).flat());
   for (const [value, title] of Object.entries(definition.values)) {
-    if (usesOutfitDefault && value === "auto") continue;
+    if ((usesOutfitDefault && value === "auto") || groupedValues.has(value)) continue;
     select.append(new Option(title, value));
+  }
+  for (const [title, values] of Object.entries(optionGroups)) {
+    const group = document.createElement("optgroup");
+    group.label = title;
+    for (const value of values) group.append(new Option(definition.values[value], value));
+    select.append(group);
   }
 
   const note = document.createElement("small");
@@ -162,12 +170,12 @@ function updateNotes(recipe) {
       message = catalog.cloak_coverage?.[cloak] ?? message;
     }
     const equipment = select.value || recipe?.equipment?.[field];
-    const held = field === "weapon" ? heldWeapons.includes(equipment)
-      : equipment && equipment !== "auto" && equipment !== "none";
+    const held = equipment && equipment !== "auto" && equipment !== "none"
+      && (field !== "weapon" || equipment !== "sheathed_sword");
     if (kind === "equipment" && handheldNames[field] && held
         && catalog.handheld_hidden_by?.[field]?.includes(cloak)) {
       message = `Плащ закрывает кисть и скрывает ${handheldNames[field]}`;
-    } else if (field === "weapon" && holdingBow && heldWeapons.includes(select.value)) {
+    } else if (field === "weapon" && holdingBow && held) {
       message = "Кисть занята луком";
     }
     note.textContent = message;
@@ -355,9 +363,8 @@ async function loadCatalog() {
 
     const groupsByLabel = new Map();
     for (const example of examples) {
-      if (example.estate || example.region) {
-        const picker = presetPickers.find(({ field }) => example[field]);
-        if (!picker) continue;
+      const picker = presetPickers.find(({ field }) => example[field]);
+      if (picker) {
         const label = example[picker.field];
         const key = `${picker.field}/${label}`;
         if (!groupsByLabel.has(key)) {
