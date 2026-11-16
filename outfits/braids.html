@@ -24,15 +24,19 @@
     .braid-status { min-height: 1.35em; margin: 14px 0 0; color: var(--muted); }
     @media (max-width: 760px) { .braid-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   </style>
-  <script src="./braids.js" defer></script>
+  <script src="./braids.js?v=loose-hair-fit" defer></script>
 </head>
 <body>
   <main>
     <header class="masthead">
       <a class="project" href="./"><img src="./mark.svg" alt="" width="22" height="22">Редактор Rus13</a>
-      <h1>Косы на разных лицах</h1>
+      <h1 id="hair-fit-heading">Косы на разных лицах</h1>
       <p>Полный рост и карточки 32 × 32. Нажмите на портрет или карточку, чтобы скачать SVG.</p>
     </header>
+    <nav class="comparison-links" aria-label="Галереи причёсок">
+      <a id="braid-fit-link" href="./braids.html">Косы</a>
+      <a id="loose-hair-fit-link" href="./braids.html?view=loose">Распущенные волосы и пучки</a>
+    </nav>
     <div class="braid-controls">
       <label class="field">
         <span>Причёска</span>

@@ -5,6 +5,13 @@ const baseSelect = document.querySelector("#braid-base");
 const gallery = document.querySelector("#braid-gallery");
 const message = document.querySelector("#braid-status");
 const retry = document.querySelector("#braid-retry");
+const looseHair = new URLSearchParams(window.location.search).get("view") === "loose";
+const title = looseHair ? "Распущенные волосы и пучки" : "Косы на разных лицах";
+const assetPrefix = looseHair ? "rus13-hair" : "rus13-braid";
+const dataFile = looseHair ? "./loose-hair-fit.json" : "./braid-fit.json";
+document.title = `${title} · Rus13`;
+document.querySelector("#hair-fit-heading").textContent = title;
+document.querySelector(looseHair ? "#loose-hair-fit-link" : "#braid-fit-link").setAttribute("aria-current", "page");
 
 let catalogue;
 let worker;
@@ -45,7 +52,7 @@ function showArtwork(target, data, name) {
 }
 
 function startWorker() {
-  worker = new Worker("./renderer-worker.js?v=braid-fit", { name: "Галерея Rus13" });
+  worker = new Worker("./renderer-worker.js?v=loose-hair-fit", { name: "Галерея Rus13" });
   worker.addEventListener("error", fail);
   worker.addEventListener("message", ({ data }) => {
     if (data.kind === "startup-error") {
@@ -59,8 +66,8 @@ function startWorker() {
         return;
       }
       const { portrait, card } = pending.get(data.id);
-      showArtwork(portrait, data.result.full, `rus13-braid-${data.id}-full.svg`);
-      showArtwork(card, data.result.card, `rus13-braid-${data.id}-32.svg`);
+      showArtwork(portrait, data.result.full, `${assetPrefix}-${data.id}-full.svg`);
+      showArtwork(card, data.result.card, `${assetPrefix}-${data.id}-32.svg`);
       pending.delete(data.id);
       if (!pending.size) {
         message.textContent = "";
@@ -124,10 +131,23 @@ async function load() {
   gallery.setAttribute("aria-busy", "true");
   try {
     if (!catalogue) {
-      const response = await fetch("./braid-fit.json");
+      const response = await fetch(dataFile);
       if (!response.ok) throw new Error("Каталог недоступен");
       catalogue = await response.json();
-      for (const [id, label] of Object.entries(catalogue.styles)) styleSelect.append(new Option(label, id));
+      const categories = new Map();
+      for (const [id, item] of Object.entries(catalogue.styles)) {
+        if (typeof item === "string") {
+          styleSelect.append(new Option(item, id));
+        } else {
+          if (!categories.has(item.category)) {
+            const list = document.createElement("optgroup");
+            list.label = item.category;
+            categories.set(item.category, list);
+            styleSelect.append(list);
+          }
+          categories.get(item.category).append(new Option(item.label, id));
+        }
+      }
       styleSelect.disabled = baseSelect.disabled = false;
       chooseBase();
     }
