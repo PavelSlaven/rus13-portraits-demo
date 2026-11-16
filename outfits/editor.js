@@ -21,12 +21,13 @@ const exampleList = document.querySelector("#examples");
 const presetPickers = [
   { field: "estate", select: document.querySelector("#adult-estates") },
   { field: "region", select: document.querySelector("#northwest-examples") },
+  { field: "shield_region", select: document.querySelector("#shield-examples") },
   { field: "weapon_region", select: document.querySelector("#eurasian-weapon-examples") },
 ].filter(({ select }) => select);
 const groupedExamples = new Map();
 const artworkViews = ["full", "portrait", "card"];
 const outfitDetailFields = [
-  "cloak", "weapon", "carry", "shield", "bow", "bow_case", "quiver",
+  "cloak", "weapon", "carry", "shield", "shield_carry", "bow", "bow_case", "quiver",
   "belt", "belt_pouch", "jewelry", "trousers", "leg_wraps", "footwear",
 ];
 const handheldNames = { weapon: "оружие", shield: "щит", bow: "лук" };
@@ -85,11 +86,13 @@ function addField(container, kind, field) {
   const usesOutfitDefault = kind === "equipment" && outfitDetailFields.includes(field);
   if (usesOutfitDefault) initialLabel = "По комплекту";
   if (field === "carry") initialLabel = "Походное";
+  if (field === "shield_carry") initialLabel = "В руке";
   select.append(new Option(initialLabel, ""));
   const optionGroups = field === "weapon" ? catalog.weapon_groups ?? {} : {};
   const groupedValues = new Set(Object.values(optionGroups).flat());
   for (const [value, title] of Object.entries(definition.values)) {
     if (field === "carry" && value === "carried") continue;
+    if (field === "shield_carry" && value === "held") continue;
     if ((usesOutfitDefault && value === "auto") || groupedValues.has(value)) continue;
     select.append(new Option(title, value));
   }
@@ -186,6 +189,8 @@ function updateNotes(recipe) {
         else message = "Подвешено у пояса";
       } else if (field === "bow" && carried) {
         message = cased ? "В налучье у пояса" : "За плечом, без тетивы";
+      } else if (field === "shield" && gear.shield_carry === "back") {
+        message = "На перевязи за спиной";
       } else if (field === "weapon" && holdingBow) {
         message = "Кисть занята луком";
       } else if (catalog.handheld_hidden_by?.[field]?.includes(cloak)) {
@@ -321,7 +326,8 @@ function applyExample(example) {
   for (const [select, { kind, field }] of controls) {
     const value = example.payload[kind]?.[field];
     const implicit = kind === "equipment"
-      && ((outfitDetailFields.includes(field) && value === "auto") || (field === "carry" && value === "carried"));
+      && ((outfitDetailFields.includes(field) && value === "auto") || (field === "carry" && value === "carried")
+        || (field === "shield_carry" && value === "held"));
     select.value = implicit ? "" : value ?? "";
   }
   setActiveExample(example.id);
@@ -451,4 +457,7 @@ retry.addEventListener("click", () => {
   else loadCatalog();
 });
 
+if (window.location.hash === "#northwest-shields") {
+  document.querySelector("#northwest-shields").open = true;
+}
 loadCatalog();
