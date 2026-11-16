@@ -24,7 +24,12 @@ const presetPickers = [
 ].filter(({ select }) => select);
 const groupedExamples = new Map();
 const artworkViews = ["full", "portrait", "card"];
-const outfitDetailFields = ["cloak", "weapon", "shield", "belt", "belt_pouch", "jewelry", "trousers", "leg_wraps", "footwear"];
+const outfitDetailFields = [
+  "cloak", "weapon", "shield", "bow", "bow_case", "quiver",
+  "belt", "belt_pouch", "jewelry", "trousers", "leg_wraps", "footwear",
+];
+const handheldNames = { weapon: "оружие", shield: "щит", bow: "лук" };
+const heldWeapons = ["sword", "axe", "spear"];
 const portraitLabels = {
   full: { alt: "Персонаж анфас в полный рост", download: "Скачать персонажа в полный рост в SVG" },
   portrait: { alt: "Портрет персонажа анфас по пояс", download: "Скачать портрет по пояс в SVG" },
@@ -140,6 +145,8 @@ function updateOptions() {
 function updateNotes(recipe) {
   const outfit = document.getElementById("equipment-outfit")?.value || recipe?.equipment?.outfit;
   const cloak = document.getElementById("equipment-cloak")?.value || recipe?.equipment?.cloak;
+  const bow = document.getElementById("equipment-bow")?.value || recipe?.equipment?.bow;
+  const holdingBow = bow && bow !== "auto" && bow !== "none";
   const jewelryHidden = catalog.jewelry_hidden_by?.includes(outfit);
   for (const [select, { kind, field, definition, note }] of controls) {
     const automatic = definition.values[recipe?.[kind]?.[field]];
@@ -154,11 +161,14 @@ function updateNotes(recipe) {
     if (field === "cloak") {
       message = catalog.cloak_coverage?.[cloak] ?? message;
     }
-    if ((field === "weapon" || field === "shield") && catalog.handheld_hidden_by?.[field]?.includes(cloak)) {
-      const equipment = select.value || recipe?.equipment?.[field];
-      if (equipment && equipment !== "auto" && equipment !== "none" && equipment !== "sheathed_sword") {
-        message = field === "weapon" ? "Плащ закрывает кисть и скрывает оружие" : "Плащ закрывает кисть и скрывает щит";
-      }
+    const equipment = select.value || recipe?.equipment?.[field];
+    const held = field === "weapon" ? heldWeapons.includes(equipment)
+      : equipment && equipment !== "auto" && equipment !== "none";
+    if (kind === "equipment" && handheldNames[field] && held
+        && catalog.handheld_hidden_by?.[field]?.includes(cloak)) {
+      message = `Плащ закрывает кисть и скрывает ${handheldNames[field]}`;
+    } else if (field === "weapon" && holdingBow && heldWeapons.includes(select.value)) {
+      message = "Кисть занята луком";
     }
     note.textContent = message;
     note.hidden = !message;
