@@ -22,6 +22,7 @@ const presetPickers = [
   { field: "estate", select: document.querySelector("#adult-estates") },
   { field: "region", select: document.querySelector("#northwest-examples") },
   { field: "shield_region", select: document.querySelector("#shield-examples") },
+  { field: "armour_group", select: document.querySelector("#armour-examples") },
   { field: "weapon_region", select: document.querySelector("#eurasian-weapon-examples") },
 ].filter(({ select }) => select);
 const groupedExamples = new Map();
@@ -163,7 +164,7 @@ function updateOptions() {
 
 function updateNotes(recipe) {
   const gear = recipe?.equipment ?? {};
-  const { outfit, cloak, bow = "none", bow_case: bowCase, carry } = gear;
+  const { outfit, cloak, headgear, bow = "none", bow_case: bowCase, carry } = gear;
   const carried = carry !== "held";
   const holdingBow = !carried && bow !== "none";
   const cased = carried && bow === "novgorod_composite" && bowCase !== "none";
@@ -180,6 +181,9 @@ function updateNotes(recipe) {
     }
     if (field === "cloak") {
       message = catalog.cloak_coverage?.[cloak] ?? message;
+    }
+    if (field === "headgear") {
+      message = catalog.headgear_coverage?.[headgear] ?? message;
     }
     const item = gear[field];
     if (kind === "equipment" && item && item !== "none" && handheldNames[field]) {
@@ -457,7 +461,6 @@ retry.addEventListener("click", () => {
   else loadCatalog();
 });
 
-if (window.location.hash === "#northwest-shields") {
-  document.querySelector("#northwest-shields").open = true;
-}
+const linkedSection = document.getElementById(window.location.hash.slice(1));
+if (linkedSection instanceof HTMLDetailsElement) linkedSection.open = true;
 loadCatalog();
