@@ -137,6 +137,7 @@ button:hover:not(:disabled) { border-color: var(--accent); }
 .detail summary { min-height: 44px; padding: 11px 6px; color: #ecd9b9; font-weight: 600; }
 .detail details[open] summary { color: var(--accent); }
 .detail .fields { padding: 0 6px 15px; }
+#clothing-detail-preview img { display: block; margin: 8px auto 0; max-width: 100%; height: auto; }
 
 @media (min-width: 841px) and (min-height: 720px) {
   .preview { position: sticky; top: 16px; }

@@ -24,10 +24,16 @@ const views = {
     dataFile: "./eye-nasal-fit.json", link: "#eye-nasal-fit-link",
     styleLabel: "Группа черт", baseLabel: "Сочетание",
   },
+  clothes: {
+    title: "Одежда и материалы", assetPrefix: "rus13-clothes",
+    dataFile: "./clothing-materials.json?v=clothing-materials", link: "#clothing-materials-link",
+    styleLabel: "Раздел гардероба", baseLabel: "Вещь",
+  },
 };
 const requestedView = new URLSearchParams(window.location.search).get("view");
 const view = Object.hasOwn(views, requestedView) ? views[requestedView] : views.braids;
 const { title, assetPrefix, dataFile, link, styleLabel, baseLabel } = view;
+const note = document.querySelector("#catalogue-note");
 document.title = `${title} · Rus13`;
 document.querySelector("#hair-fit-heading").textContent = title;
 document.querySelector(link).setAttribute("aria-current", "page");
@@ -73,7 +79,7 @@ function showArtwork(target, data, name) {
 }
 
 function startWorker() {
-  worker = new Worker("./renderer-worker.js?v=moustache-lip-fit", { name: "Галерея Rus13" });
+  worker = new Worker("./renderer-worker.js?v=clothing-materials", { name: "Галерея Rus13" });
   worker.addEventListener("error", fail);
   worker.addEventListener("message", ({ data }) => {
     if (data.kind === "startup-error") {
@@ -86,9 +92,10 @@ function startWorker() {
         fail();
         return;
       }
-      const { portrait, card } = pending.get(data.id);
+      const { portrait, card, detail } = pending.get(data.id);
       showArtwork(portrait, data.result.full, `${assetPrefix}-${data.id}-full.svg`);
       showArtwork(card, data.result.card, `${assetPrefix}-${data.id}-32.svg`);
+      if (detail && data.result.detail) showArtwork(detail, data.result.detail, `${assetPrefix}-${data.id}-detail.svg`);
       pending.delete(data.id);
       if (!pending.size) {
         message.textContent = "";
@@ -101,6 +108,8 @@ function startWorker() {
 function render() {
   if (!ready) return;
   const group = catalogue.groups[Number(baseSelect.value)];
+  note.textContent = group.note ?? "";
+  note.hidden = !note.textContent;
   const rows = new Map();
   const next = document.createDocumentFragment();
   pending = new Map();
@@ -131,9 +140,10 @@ function render() {
     hat.textContent = sample.headwear;
     caption.append(hat);
     tile.append(caption);
+    const detail = sample.detail ? addArtwork(tile, "garment-detail", "Деталь вещи крупным планом", 320, 200) : null;
     rows.get(sample.face).append(tile);
     const id = `${current}-${index + 1}`;
-    pending.set(id, { portrait, card });
+    pending.set(id, { portrait, card, detail });
     worker.postMessage({ id, payload: sample.payload });
   }
   gallery.replaceChildren(next);

@@ -9,7 +9,7 @@
   <title>Rus13 · Генератор персонажей</title>
   <link rel="icon" href="./mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./studio.css">
-  <script src="./editor.js?v=moustache-lip-fit" defer></script>
+  <script src="./editor.js?v=clothing-materials" defer></script>
 </head>
 <body>
   <main>
@@ -47,6 +47,11 @@
             <a id="save-card" class="download" href="./man-card.svg"
               download="rus13-card.svg" aria-label="Скачать карточку в SVG">Скачать SVG</a>
           </figure>
+          <figure id="clothing-detail-preview" hidden>
+            <a id="save-clothing-detail" download="rus13-detail.svg" aria-label="Скачать деталь одежды в SVG">
+              <img id="clothing-detail-drawing" width="320" height="200" alt="Деталь вещи крупным планом">
+            </a>
+          </figure>
         </div>
         <noscript>Для работы генератора нужен JavaScript.</noscript>
       </section>
@@ -55,6 +60,9 @@
         <section class="examples" aria-labelledby="examples-title">
           <h2 id="examples-title">Примеры</h2>
           <div id="examples" class="example-list"></div>
+          <div class="comparison-links">
+            <a href="./braids.html?view=clothes">Одежда и материалы · весь каталог</a>
+          </div>
           <details id="northwest-presets" class="outfit-archive">
             <summary>Новгород и соседи</summary>
             <div class="comparison-links">

@@ -19,6 +19,9 @@ const portraitFrame = portrait.parentElement;
 const portraitDownload = document.querySelector("#save-portrait");
 const card = document.querySelector("#card");
 const cardDownload = document.querySelector("#save-card");
+const clothingDetailPreview = document.querySelector("#clothing-detail-preview");
+const clothingDetailDownload = document.querySelector("#save-clothing-detail");
+const clothingDetailDrawing = document.querySelector("#clothing-detail-drawing");
 const portraitViewButtons = document.querySelectorAll("[data-portrait-view]");
 const exampleList = document.querySelector("#examples");
 const presetPickers = [
@@ -32,7 +35,8 @@ const groupedExamples = new Map();
 const artworkViews = ["full", "portrait", "card"];
 const outfitDetailFields = [
   "cloak", "weapon", "carry", "shield", "shield_carry", "bow", "bow_case", "quiver",
-  "belt", "belt_pouch", "jewelry", "trousers", "leg_wraps", "footwear",
+  "belt", "belt_pouch", "accessory", "jewelry", "trousers", "leg_wraps", "footwear",
+  "apron", "vestment", "gloves", "foot_lining", "insole", "shoe_accessory",
 ];
 const handheldNames = { weapon: "оружие", shield: "щит", bow: "лук" };
 const portraitLabels = {
@@ -55,6 +59,7 @@ const groups = [
 const controls = new Map();
 let catalog;
 let lastRecipe;
+let automaticMaterialsReady = false;
 let presetControls;
 let timer;
 let renderId = 0;
@@ -62,7 +67,6 @@ let renderer;
 let ready = false;
 let pendingRender;
 let sampleModes = {};
-let presetAccessory;
 let portraitView = "full";
 let artworkSources = exampleArtwork("man");
 let artworkAvailable = true;
@@ -86,7 +90,7 @@ function addField(container, kind, field) {
   select.name = field;
   select.id = `${kind}-${field}`;
   label.htmlFor = select.id;
-  select.append(new Option("По seed", ""));
+  select.append(new Option(catalog.material_slots?.[field] ? "По фасону" : "По seed", ""));
   const optionGroups = field === "weapon" ? catalog.weapon_groups ?? {} : {};
   const groupedValues = new Set(Object.values(optionGroups).flat());
   for (const [value, title] of Object.entries(definition.values)) {
@@ -136,6 +140,41 @@ function outsideEstate(field, value) {
   return selected && Array.isArray(memberships) && !memberships.includes(selected);
 }
 
+function materialControl(slot) {
+  return document.getElementById(`equipment-${slot}`);
+}
+
+function updateMaterials() {
+  for (const [select, { field, definition, wrapper }] of controls) {
+    const slot = catalog.material_slots?.[field];
+    if (!slot) continue;
+    const item = materialControl(slot)?.value
+      || (automaticMaterialsReady && lastRecipe?.equipment?.[slot]);
+    const choices = catalog.equipment_materials[field]?.[item] ?? {};
+    if (select.value && !Object.hasOwn(choices, select.value)) select.value = "";
+    wrapper.hidden = select.disabled = !Object.keys(choices).length;
+    for (const option of select.options) {
+      if (!option.value) continue;
+      const title = definition.values[option.value];
+      option.disabled = option.hidden = !Object.hasOwn(choices, option.value);
+      option.textContent = choices[option.value] === false ? title + " · художественный вариант" : title;
+    }
+  }
+}
+
+function clearMaterialChoices(slot) {
+  for (const [field, itemSlot] of Object.entries(catalog.material_slots ?? {})) {
+    if (slot === itemSlot) materialControl(field).value = "";
+  }
+}
+
+function invalidateAutomaticMaterials() {
+  automaticMaterialsReady = false;
+  for (const slot of new Set(Object.values(catalog.material_slots ?? {}))) {
+    if (!materialControl(slot).value) clearMaterialChoices(slot);
+  }
+}
+
 function updateOptions() {
   const generated = !presetControls;
   const restrictions = generated ? catalog.generated_age_restrictions : catalog.age_restrictions;
@@ -167,14 +206,19 @@ function updateOptions() {
 
   let compatible = bases;
   for (const [select, control] of controls) {
-    if (!select.value) continue;
+    if (!select.value || catalog.material_slots?.[control.field]) continue;
     const matching = compatible.filter(base => fits(control, select.value, base));
-    if (matching.length) compatible = matching;
-    else select.value = "";
+    if (matching.length) {
+      compatible = matching;
+    } else {
+      select.value = "";
+      if (control.kind === "equipment") clearMaterialChoices(control.field);
+    }
   }
-  const pinned = Array.from(controls).filter(([select]) => select.value);
+  const pinned = Array.from(controls).filter(([select, { field }]) => select.value && !catalog.material_slots?.[field]);
   for (const [select, control] of controls) {
     const { kind, field, definition, wrapper } = control;
+    if (catalog.material_slots?.[field]) continue;
     const restricted = restrictions[visibleAge]?.[field] ?? [];
     const hidden = kind === "equipment" && Object.keys(definition.values).every(value =>
       value === "auto" || value === "none" || restricted.includes(value)
@@ -192,6 +236,7 @@ function updateOptions() {
       option.textContent = outside ? title + " · " + label : title;
     }
   }
+  updateMaterials();
 }
 
 function updateNotes(recipe) {
@@ -258,7 +303,6 @@ function selection() {
   const payload = { ...sampleModes, seed: seed.value, generate: !presetControls, appearance: {}, equipment: {} };
   if (profile.value) payload.profile = profile.value;
   if (estate.value) payload.estate = estate.value;
-  if (presetAccessory) payload.equipment.accessory = presetAccessory;
   for (const [select, { kind, field }] of controls) {
     if (select.value && !select.disabled) payload[kind][field] = select.value;
   }
@@ -290,6 +334,8 @@ function replaceArtwork(sources) {
   artworkAvailable = true;
   updatePortrait();
   setArtworkSource(card, cardDownload, sources.card);
+  clothingDetailPreview.hidden = !sources.detail;
+  if (sources.detail) setArtworkSource(clothingDetailDrawing, clothingDetailDownload, sources.detail);
   for (const url of Object.values(previousSources)) {
     if (url.startsWith("blob:")) URL.revokeObjectURL(url);
   }
@@ -299,7 +345,8 @@ function showArtwork(result) {
   if (artworkViews.some(view => typeof result[view] !== "string" || !result[view])) {
     throw new Error("Генератор вернул неполный портрет.");
   }
-  replaceArtwork(Object.fromEntries(artworkViews.map(view => [
+  const views = typeof result.detail === "string" ? [...artworkViews, "detail"] : artworkViews;
+  replaceArtwork(Object.fromEntries(views.map(view => [
     view, URL.createObjectURL(new Blob([result[view]], { type: "image/svg+xml" })),
   ])));
 }
@@ -318,7 +365,7 @@ function setPortraitView(view) {
 
 function startRenderer() {
   if (renderer) return;
-  const worker = new Worker("./renderer-worker.js?v=moustache-lip-fit", { name: "Rus13" });
+  const worker = new Worker("./renderer-worker.js?v=clothing-materials", { name: "Rus13" });
   renderer = worker;
   function fail() {
     worker.terminate();
@@ -348,6 +395,7 @@ function startRenderer() {
       if (data.kind !== "rendered") throw new Error(data.error || "Проверьте настройки и попробуйте снова.");
       showArtwork(data.result);
       lastRecipe = data.result.recipe;
+      automaticMaterialsReady = true;
       updateOptions();
       updateNotes(lastRecipe);
       setStatus("Портрет обновлён.");
@@ -370,7 +418,6 @@ function applyExample(example) {
   renderId += 1;
   pendingRender = null;
   sampleModes = {};
-  presetAccessory = example.payload.equipment?.accessory;
   for (const flag of ["extended", "expanded_hair", "distinct_bases", "cast_traits"]) {
     if (typeof example.payload[flag] === "boolean") sampleModes[flag] = example.payload[flag];
   }
@@ -384,6 +431,7 @@ function applyExample(example) {
   }
   setActiveExample(example.id);
   lastRecipe = example.recipe;
+  automaticMaterialsReady = true;
   updateOptions();
   updateNotes(lastRecipe);
   replaceArtwork(exampleArtwork(example.id));
@@ -414,6 +462,7 @@ function scheduleRender(delay = 0) {
   artworkAvailable = false;
   updatePortrait();
   setArtworkSource(card, cardDownload, artworkSources.card);
+  if (artworkSources.detail) setArtworkSource(clothingDetailDrawing, clothingDetailDownload, artworkSources.detail);
   updateNotes();
   if (!seed.value) {
     setStatus("Введите seed, чтобы обновить портрет.");
@@ -426,7 +475,7 @@ function scheduleRender(delay = 0) {
 async function loadCatalog() {
   setStatus("Загружаем редактор…", { busy: true });
   try {
-    const response = await fetch("./studio.json?v=moustache-lip-fit");
+    const response = await fetch("./studio.json?v=clothing-materials");
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const { catalog: data, examples } = await response.json();
     profile.replaceChildren(new Option("По seed", ""));
@@ -443,6 +492,7 @@ async function loadCatalog() {
 
     const assigned = new Set(Array.from(controls.values(), ({ field }) => field));
     addGroup("Другие черты", "appearance", Object.keys(catalog.appearance).filter(field => !assigned.has(field)));
+    addGroup("Материалы вещей", "equipment", Object.keys(catalog.material_slots ?? {}));
 
     const groupsByLabel = new Map();
     for (const example of examples) {
@@ -495,12 +545,12 @@ function useAutomatic(changed) {
     if (select !== changed) select.value = "";
   }
   presetControls = undefined;
-  presetAccessory = undefined;
   sampleModes = {};
 }
 
 function reseed(delay = 0) {
   useAutomatic();
+  invalidateAutomaticMaterials();
   updateOptions();
   scheduleRender(delay);
 }
@@ -514,8 +564,10 @@ editor.addEventListener("change", event => {
   const target = event.target;
   const control = controls.get(target);
   if (!control && target !== profile && target !== estate) return;
+  if (control?.kind === "equipment" && !target.value) clearMaterialChoices(control.field);
   if (target === profile || target === estate) useAutomatic(target);
   else presetControls?.delete(target);
+  if (!catalog.material_slots?.[control?.field]) invalidateAutomaticMaterials();
   updateOptions();
   if (outfitDetailFields.includes(control?.field)) setPortraitView("full");
   scheduleRender();
@@ -524,6 +576,7 @@ reset.addEventListener("click", () => {
   useAutomatic();
   for (const select of [profile, estate, ...controls.keys()]) select.value = "";
   lastRecipe = undefined;
+  automaticMaterialsReady = false;
   updateOptions();
   scheduleRender();
 });
