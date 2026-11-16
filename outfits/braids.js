@@ -5,13 +5,29 @@ const baseSelect = document.querySelector("#braid-base");
 const gallery = document.querySelector("#braid-gallery");
 const message = document.querySelector("#braid-status");
 const retry = document.querySelector("#braid-retry");
-const looseHair = new URLSearchParams(window.location.search).get("view") === "loose";
-const title = looseHair ? "Распущенные волосы и пучки" : "Косы на разных лицах";
-const assetPrefix = looseHair ? "rus13-hair" : "rus13-braid";
-const dataFile = looseHair ? "./loose-hair-fit.json" : "./braid-fit.json";
+const views = {
+  braids: {
+    title: "Косы на разных лицах", assetPrefix: "rus13-braid",
+    dataFile: "./braid-fit.json", link: "#braid-fit-link",
+  },
+  loose: {
+    title: "Распущенные волосы и пучки", assetPrefix: "rus13-hair",
+    dataFile: "./loose-hair-fit.json", link: "#loose-hair-fit-link",
+  },
+  facial: {
+    title: "Бороды и усы с бармицей и без", assetPrefix: "rus13-facial-hair",
+    dataFile: "./facial-hair-fit.json", link: "#facial-hair-fit-link",
+    styleLabel: "Бороды, усы и рост", baseLabel: "Вариант",
+  },
+};
+const requestedView = new URLSearchParams(window.location.search).get("view");
+const view = Object.hasOwn(views, requestedView) ? views[requestedView] : views.braids;
+const { title, assetPrefix, dataFile, link, styleLabel, baseLabel } = view;
 document.title = `${title} · Rus13`;
 document.querySelector("#hair-fit-heading").textContent = title;
-document.querySelector(looseHair ? "#loose-hair-fit-link" : "#braid-fit-link").setAttribute("aria-current", "page");
+document.querySelector(link).setAttribute("aria-current", "page");
+if (styleLabel) document.querySelector("#braid-style-label").textContent = styleLabel;
+if (baseLabel) document.querySelector("#braid-base-label").textContent = baseLabel;
 
 let catalogue;
 let worker;
@@ -52,7 +68,7 @@ function showArtwork(target, data, name) {
 }
 
 function startWorker() {
-  worker = new Worker("./renderer-worker.js?v=loose-hair-fit", { name: "Галерея Rus13" });
+  worker = new Worker("./renderer-worker.js?v=facial-hair-fit", { name: "Галерея Rus13" });
   worker.addEventListener("error", fail);
   worker.addEventListener("message", ({ data }) => {
     if (data.kind === "startup-error") {
