@@ -137,32 +137,48 @@ function outsideEstate(field, value) {
 }
 
 function updateOptions() {
+  const generated = !presetControls;
+  const restrictions = generated ? catalog.generated_age_restrictions : catalog.age_restrictions;
+  const equipmentCasts = generated ? catalog.generated_equipment_casts : catalog.equipment_casts;
+  const wardrobes = catalog.profile_cultures;
+  const cultures = generated && profile.value !== "free"
+    ? wardrobes[profile.value] ?? Object.values(wardrobes).flat()
+    : [null];
   const cast = document.getElementById("appearance-cast").value;
   const age = document.getElementById("appearance-age").value;
   const length = document.getElementById("appearance-hair_length").value;
   const hairstyles = catalog.hair_styles_by_length?.[length];
   const visibleAge = age || lastRecipe?.appearance?.age;
+  const visibleCast = cast || lastRecipe?.appearance?.cast;
   const childLabels = visibleAge === "child" ? { men: "Мальчик", women: "Девочка" } : {};
   const bases = (cast ? [cast] : Object.keys(catalog.appearance.cast.values)).flatMap(base =>
-    (age ? [age] : Object.keys(catalog.appearance.age.values)).map(years => ({ base, years })));
+    (age ? [age] : Object.keys(catalog.appearance.age.values)).flatMap(years =>
+      cultures.map(culture => ({ base, years, culture }))));
 
-  function fits({ kind, field }, value, { base, years }) {
-    const groups = kind === "appearance" ? catalog.exclusive_traits : catalog.equipment_casts;
+  function fits({ kind, field }, value, { base, years, culture }) {
+    const groups = kind === "appearance" ? catalog.exclusive_traits : equipmentCasts;
     const required = groups?.[field]?.[value];
+    const itemCultures = kind === "equipment" && culture && catalog.equipment_cultures[field][value];
     return (!required || required === base)
-      && !catalog.age_restrictions?.[years]?.[field]?.includes(value)
+      && !restrictions[years]?.[field]?.includes(value)
+      && (!itemCultures || itemCultures.includes(culture))
       && (field !== "hair_style" || !hairstyles || hairstyles.includes(value));
   }
 
+  let compatible = bases;
   for (const [select, control] of controls) {
-    if (select.value && !bases.some(base => fits(control, select.value, base))) select.value = "";
+    if (!select.value) continue;
+    const matching = compatible.filter(base => fits(control, select.value, base));
+    if (matching.length) compatible = matching;
+    else select.value = "";
   }
   const pinned = Array.from(controls).filter(([select]) => select.value);
   for (const [select, control] of controls) {
     const { kind, field, definition, wrapper } = control;
-    const restricted = catalog.age_restrictions?.[visibleAge]?.[field] ?? [];
-    const hidden = kind === "equipment" && restricted.length > 0
-      && Object.keys(definition.values).every(value => value === "auto" || value === "none" || restricted.includes(value));
+    const restricted = restrictions[visibleAge]?.[field] ?? [];
+    const hidden = kind === "equipment" && Object.keys(definition.values).every(value =>
+      value === "auto" || value === "none" || restricted.includes(value)
+      || (generated && visibleCast === "women" && equipmentCasts[field]?.[value] === "men"));
     wrapper.hidden = select.disabled = hidden;
     const possible = bases.filter(base => pinned.every(([other, entry]) =>
       other === select || fits(entry, other.value, base)));
@@ -185,6 +201,11 @@ function updateNotes(recipe) {
   ]) {
     note.textContent = select.value ? "" : names[value] ?? "";
     note.hidden = !note.textContent;
+  }
+  const culture = catalog.cultures[recipe?.culture];
+  if (culture) {
+    profileNote.textContent = [profileNote.textContent, culture].filter(Boolean).join(" · ");
+    profileNote.hidden = false;
   }
   const gear = recipe?.equipment ?? {};
   const { outfit, cloak, headgear, bow = "none", bow_case: bowCase, carry } = gear;
@@ -297,7 +318,7 @@ function setPortraitView(view) {
 
 function startRenderer() {
   if (renderer) return;
-  const worker = new Worker("./renderer-worker.js", { name: "Rus13" });
+  const worker = new Worker("./renderer-worker.js?v=cultural-wardrobes", { name: "Rus13" });
   renderer = worker;
   function fail() {
     worker.terminate();
@@ -405,7 +426,7 @@ function scheduleRender(delay = 0) {
 async function loadCatalog() {
   setStatus("Загружаем редактор…", { busy: true });
   try {
-    const response = await fetch("./studio.json");
+    const response = await fetch("./studio.json?v=cultural-wardrobes");
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const { catalog: data, examples } = await response.json();
     profile.replaceChildren(new Option("По seed", ""));

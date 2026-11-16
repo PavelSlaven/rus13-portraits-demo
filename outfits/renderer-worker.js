@@ -1,13 +1,13 @@
 "use strict";
 
-const runtime = "https://cdn.jsdelivr.net/pyodide/v0.29.5/full/";
+const runtime = "https://unpkg.com/pyodide@0.29.5/";
 let renderSvgPair;
 
 async function start() {
   importScripts("./runtime/pyodide.js");
   const [python, response] = await Promise.all([
     loadPyodide({ indexURL: runtime }),
-    fetch("./engine.zip"),
+    fetch("./engine.zip?v=cultural-wardrobes"),
   ]);
   if (!response.ok) throw new Error("Архив генератора недоступен.");
 
