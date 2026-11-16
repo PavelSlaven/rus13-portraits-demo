@@ -73,7 +73,7 @@ function showArtwork(target, data, name) {
 }
 
 function startWorker() {
-  worker = new Worker("./renderer-worker.js?v=eye-nasal-fit", { name: "Галерея Rus13" });
+  worker = new Worker("./renderer-worker.js?v=waist-crop", { name: "Галерея Rus13" });
   worker.addEventListener("error", fail);
   worker.addEventListener("message", ({ data }) => {
     if (data.kind === "startup-error") {

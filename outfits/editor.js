@@ -318,7 +318,7 @@ function setPortraitView(view) {
 
 function startRenderer() {
   if (renderer) return;
-  const worker = new Worker("./renderer-worker.js?v=eye-nasal-fit", { name: "Rus13" });
+  const worker = new Worker("./renderer-worker.js?v=waist-crop", { name: "Rus13" });
   renderer = worker;
   function fail() {
     worker.terminate();
