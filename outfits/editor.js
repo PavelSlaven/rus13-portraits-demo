@@ -318,7 +318,7 @@ function setPortraitView(view) {
 
 function startRenderer() {
   if (renderer) return;
-  const worker = new Worker("./renderer-worker.js?v=grooming-fit", { name: "Rus13" });
+  const worker = new Worker("./renderer-worker.js?v=card-grooming", { name: "Rus13" });
   renderer = worker;
   function fail() {
     worker.terminate();

@@ -73,7 +73,7 @@ function showArtwork(target, data, name) {
 }
 
 function startWorker() {
-  worker = new Worker("./renderer-worker.js?v=grooming-fit", { name: "Галерея Rus13" });
+  worker = new Worker("./renderer-worker.js?v=card-grooming", { name: "Галерея Rus13" });
   worker.addEventListener("error", fail);
   worker.addEventListener("message", ({ data }) => {
     if (data.kind === "startup-error") {
