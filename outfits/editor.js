@@ -26,7 +26,7 @@ const presetPickers = [
 const groupedExamples = new Map();
 const artworkViews = ["full", "portrait", "card"];
 const outfitDetailFields = [
-  "cloak", "weapon", "shield", "bow", "bow_case", "quiver",
+  "cloak", "weapon", "carry", "shield", "bow", "bow_case", "quiver",
   "belt", "belt_pouch", "jewelry", "trousers", "leg_wraps", "footwear",
 ];
 const handheldNames = { weapon: "оружие", shield: "щит", bow: "лук" };
@@ -83,10 +83,12 @@ function addField(container, kind, field) {
   if (field === "hair_length") initialLabel = "По причёске";
   const usesOutfitDefault = kind === "equipment" && outfitDetailFields.includes(field);
   if (usesOutfitDefault) initialLabel = "По комплекту";
+  if (field === "carry") initialLabel = "Походное";
   select.append(new Option(initialLabel, ""));
   const optionGroups = field === "weapon" ? catalog.weapon_groups ?? {} : {};
   const groupedValues = new Set(Object.values(optionGroups).flat());
   for (const [value, title] of Object.entries(definition.values)) {
+    if (field === "carry" && value === "carried") continue;
     if ((usesOutfitDefault && value === "auto") || groupedValues.has(value)) continue;
     select.append(new Option(title, value));
   }
@@ -151,10 +153,11 @@ function updateOptions() {
 }
 
 function updateNotes(recipe) {
-  const outfit = document.getElementById("equipment-outfit")?.value || recipe?.equipment?.outfit;
-  const cloak = document.getElementById("equipment-cloak")?.value || recipe?.equipment?.cloak;
-  const bow = document.getElementById("equipment-bow")?.value || recipe?.equipment?.bow;
-  const holdingBow = bow && bow !== "auto" && bow !== "none";
+  const gear = recipe?.equipment ?? {};
+  const { outfit, cloak, bow = "none", bow_case: bowCase, carry } = gear;
+  const carried = carry !== "held";
+  const holdingBow = !carried && bow !== "none";
+  const cased = carried && bow === "novgorod_composite" && bowCase !== "none";
   const jewelryHidden = catalog.jewelry_hidden_by?.includes(outfit);
   for (const [select, { kind, field, definition, note }] of controls) {
     const automatic = definition.values[recipe?.[kind]?.[field]];
@@ -169,14 +172,22 @@ function updateNotes(recipe) {
     if (field === "cloak") {
       message = catalog.cloak_coverage?.[cloak] ?? message;
     }
-    const equipment = select.value || recipe?.equipment?.[field];
-    const held = equipment && equipment !== "auto" && equipment !== "none"
-      && (field !== "weapon" || equipment !== "sheathed_sword");
-    if (kind === "equipment" && handheldNames[field] && held
-        && catalog.handheld_hidden_by?.[field]?.includes(cloak)) {
-      message = `Плащ закрывает кисть и скрывает ${handheldNames[field]}`;
-    } else if (field === "weapon" && holdingBow && held) {
-      message = "Кисть занята луком";
+    const item = gear[field];
+    if (kind === "equipment" && item && item !== "none" && handheldNames[field]) {
+      if (field === "weapon" && (carried || item === "sheathed_sword")) {
+        if (catalog.sheathed_weapons?.includes(item)) message = "В ножнах на левом бедре";
+        else if (catalog.back_weapons?.includes(item)) message = "На перевязи за плечом";
+        else message = "Подвешено у пояса";
+      } else if (field === "bow" && carried) {
+        message = cased ? "В налучье у пояса" : "За плечом, без тетивы";
+      } else if (field === "weapon" && holdingBow) {
+        message = "Кисть занята луком";
+      } else if (catalog.handheld_hidden_by?.[field]?.includes(cloak)) {
+        message = `Плащ закрывает кисть и скрывает ${handheldNames[field]}`;
+      }
+    }
+    if (kind === "equipment" && field === "bow_case" && cased && bowCase === undefined) {
+      message = "Кожаное налучье с луком";
     }
     note.textContent = message;
     note.hidden = !message;
@@ -301,7 +312,9 @@ function applyExample(example) {
   profile.value = example.payload.profile;
   for (const [select, { kind, field }] of controls) {
     const value = example.payload[kind]?.[field];
-    select.value = kind === "equipment" && outfitDetailFields.includes(field) && value === "auto" ? "" : value ?? "";
+    const implicit = kind === "equipment"
+      && ((outfitDetailFields.includes(field) && value === "auto") || (field === "carry" && value === "carried"));
+    select.value = implicit ? "" : value ?? "";
   }
   setActiveExample(example.id);
   updateOptions();
