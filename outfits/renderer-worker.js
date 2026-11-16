@@ -7,7 +7,7 @@ async function start() {
   importScripts("./runtime/pyodide.js");
   const [python, response] = await Promise.all([
     loadPyodide({ indexURL: runtime }),
-    fetch("./engine.zip?v=facial-hair-fit"),
+    fetch("./engine.zip?v=eye-nasal-fit"),
   ]);
   if (!response.ok) throw new Error("Архив генератора недоступен.");
 

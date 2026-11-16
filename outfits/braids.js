@@ -19,6 +19,11 @@ const views = {
     dataFile: "./facial-hair-fit.json", link: "#facial-hair-fit-link",
     styleLabel: "Бороды, усы и рост", baseLabel: "Вариант",
   },
+  eyes: {
+    title: "Глаза, брови и нос", assetPrefix: "rus13-eye-fit",
+    dataFile: "./eye-nasal-fit.json", link: "#eye-nasal-fit-link",
+    styleLabel: "Группа черт", baseLabel: "Сочетание",
+  },
 };
 const requestedView = new URLSearchParams(window.location.search).get("view");
 const view = Object.hasOwn(views, requestedView) ? views[requestedView] : views.braids;
@@ -68,7 +73,7 @@ function showArtwork(target, data, name) {
 }
 
 function startWorker() {
-  worker = new Worker("./renderer-worker.js?v=facial-hair-fit", { name: "Галерея Rus13" });
+  worker = new Worker("./renderer-worker.js?v=eye-nasal-fit", { name: "Галерея Rus13" });
   worker.addEventListener("error", fail);
   worker.addEventListener("message", ({ data }) => {
     if (data.kind === "startup-error") {
