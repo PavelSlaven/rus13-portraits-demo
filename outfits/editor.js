@@ -55,6 +55,7 @@ let renderer;
 let ready = false;
 let pendingRender;
 let sampleModes = {};
+let presetAccessory;
 let portraitView = "full";
 let artworkSources = exampleArtwork("man");
 let artworkAvailable = true;
@@ -108,7 +109,7 @@ function addField(container, kind, field) {
   wrapper.className = "field";
   wrapper.append(label, note);
   container.append(wrapper);
-  controls.set(select, { kind, field, definition, note });
+  controls.set(select, { kind, field, definition, note, wrapper });
 }
 
 function addGroup(title, kind, fields) {
@@ -134,15 +135,20 @@ function updateOptions() {
   const length = document.getElementById("appearance-hair_length")?.value ?? "";
   const hairstyles = catalog.hair_styles_by_length?.[length || "default"];
   const childLabels = age === "child" ? {men: "Мальчик", women: "Девочка"} : {};
-  for (const [select, { kind, field, definition }] of controls) {
+  const restrictions = catalog.age_restrictions?.[age] ?? {};
+  for (const [select, { kind, field, definition, wrapper }] of controls) {
     const appearanceField = kind === "appearance";
     const castRestrictions = appearanceField ? catalog.exclusive_traits?.[field] : catalog.equipment_casts?.[field];
-    if (!appearanceField && !castRestrictions) continue;
+    const ageRestrictions = restrictions[field] ?? [];
+    const hidden = !appearanceField && ageRestrictions.length > 0
+      && Object.keys(definition.values).every(value => value === "auto" || value === "none"
+        || ageRestrictions.includes(value));
+    wrapper.hidden = select.disabled = hidden;
+    if (hidden) continue;
     for (const option of select.options) {
       if (!option.value) continue;
       const required = castRestrictions?.[option.value];
-      const wrongAge = catalog.age_restrictions?.[age]?.[field]?.includes(option.value)
-        || (!appearanceField && age === "child" && Boolean(required));
+      const wrongAge = ageRestrictions.includes(option.value);
       const wrongLength = field === "hair_style" && hairstyles && !hairstyles.includes(option.value);
       option.disabled = option.hidden = Boolean(wrongAge || wrongLength || (required && required !== cast));
       const title = (field === "cast" && childLabels[option.value]) || definition.values[option.value];
@@ -196,8 +202,9 @@ function updateNotes(recipe) {
 
 function selection() {
   const payload = { ...sampleModes, seed: seed.value, profile: profile.value, appearance: {}, equipment: {} };
+  if (presetAccessory) payload.equipment.accessory = presetAccessory;
   for (const [select, { kind, field }] of controls) {
-    if (select.value) payload[kind][field] = select.value;
+    if (select.value && !select.disabled) payload[kind][field] = select.value;
   }
   return payload;
 }
@@ -305,6 +312,7 @@ function applyExample(example) {
   renderId += 1;
   pendingRender = null;
   sampleModes = {};
+  presetAccessory = example.payload.equipment?.accessory;
   for (const flag of ["extended", "expanded_hair", "distinct_bases", "cast_traits"]) {
     if (typeof example.payload[flag] === "boolean") sampleModes[flag] = example.payload[flag];
   }
@@ -367,12 +375,13 @@ async function loadCatalog() {
     catalog = data;
 
     for (const field of ["cast", "age", "body"]) addField(primaryFields, "appearance", field);
-    for (const field of ["outfit", ...outfitDetailFields, "headgear"]) addField(primaryFields, "equipment", field);
+    for (const field of ["outfit", "cloth_color", ...outfitDetailFields, "headgear", "background"]) {
+      addField(primaryFields, "equipment", field);
+    }
     for (const [title, fields] of groups) addGroup(title, "appearance", fields.split(" "));
 
     const assigned = new Set(Array.from(controls.values(), ({ field }) => field));
     addGroup("Другие черты", "appearance", Object.keys(catalog.appearance).filter(field => !assigned.has(field)));
-    addGroup("Экипировка и фон", "equipment", Object.keys(catalog.equipment).filter(field => !assigned.has(field)));
 
     const groupsByLabel = new Map();
     for (const example of examples) {
@@ -432,6 +441,7 @@ editor.addEventListener("change", event => {
 });
 reset.addEventListener("click", () => {
   sampleModes = {};
+  presetAccessory = undefined;
   for (const select of controls.keys()) select.value = "";
   updateOptions();
   scheduleRender();
