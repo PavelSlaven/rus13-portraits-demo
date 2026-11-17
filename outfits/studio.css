@@ -154,3 +154,6 @@ button:hover:not(:disabled) { border-color: var(--accent); }
   .source { grid-column: 1 / -1; }
   .detail .fields { grid-template-columns: minmax(0, 1fr); }
 }
+
+.recipe-controls { display: grid; gap: 8px; margin-top: 14px; font-size: .875rem; }
+.recipe-controls .download { margin-inline-start: 0; }

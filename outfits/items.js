@@ -22,14 +22,15 @@ function selectedItem() {
   return items.find(item => item.id === select.value);
 }
 
-function fillItems() {
+function fillItems(preferred) {
   const selected = select.value;
+  const target = preferred ?? selected;
   const query = el("search").value.trim().toLocaleLowerCase("ru");
   const category = el("category").value;
   const filtered = items.filter(item => (!category || item.category === category)
     && `${item.id} ${item.label}`.toLocaleLowerCase("ru").includes(query));
   select.replaceChildren(...filtered.map(item => new Option(item.label, item.id)));
-  if (filtered.some(item => item.id === selected)) select.value = selected;
+  if (filtered.some(item => item.id === target)) select.value = target;
   else if (filtered.length) select.value = filtered[0].id;
   el("count").textContent = `${filtered.length} из ${items.length} вещей`;
   select.disabled = !filtered.length;
@@ -96,7 +97,8 @@ async function render() {
   const id = ++jobId;
   el("item-title").textContent = item.label;
   el("item-id").textContent = `${item.id} · ${item.category}`;
-  el("item-note").textContent = item.note;
+  el("item-note").textContent = [item.integration_status === "research_only"
+    ? "Исследовательский просмотр. Предмет исключён из автоматического подбора." : "", item.note].filter(Boolean).join(" ");
   sourceDetails(item);
   const appearance = {body:el("body").value};
   if (el("skull").value) appearance.skull = el("skull").value;
@@ -127,12 +129,12 @@ async function render() {
 
 async function start() {
   try {
-    const response = await fetch("./image-inventory.json?v=shield-fit-1");
+    const response = await fetch("./image-inventory.json?v=catalog-audit-1");
     if (!response.ok) throw new Error("Каталог INDEX недоступен.");
     items = await response.json();
     for (const category of new Set(items.map(item => item.category))) el("category").append(new Option(category, category));
     if (document.body.dataset.runtime === "browser") {
-      worker = new Worker("./renderer-worker.js?v=shield-fit-1", {name:"Rus13 · INDEX"});
+      worker = new Worker("./renderer-worker.js?v=catalog-audit-1", {name:"Rus13 · INDEX"});
       worker.addEventListener("message", ({data}) => {
         if (data.kind === "ready") {ready = true; if (pending) worker.postMessage(pending);}
         else if (data.id === jobId && data.kind === "rendered") show(data.result);
@@ -141,15 +143,14 @@ async function start() {
       });
       worker.addEventListener("error", () => message("Ошибка загрузки генератора. Обновите страницу.", true));
     }
-    fillItems();
     const requested = new URL(window.location.href).searchParams.get("item");
-    if (items.some(item => item.id === requested)) {select.value = requested; render();}
+    fillItems(requested);
   } catch (error) {message(error.message, true);}
 }
 
 picker.addEventListener("submit", event => {event.preventDefault();render();});
-el("search").addEventListener("input", fillItems);
-el("category").addEventListener("change", fillItems);
+el("search").addEventListener("input", () => fillItems());
+el("category").addEventListener("change", () => fillItems());
 for (const id of ["item", "body", "skull", "cloak"]) el(id).addEventListener("change", render);
 document.querySelectorAll("[data-view]").forEach(button => button.addEventListener("click", () => {view = button.dataset.view;updateView();}));
 start();

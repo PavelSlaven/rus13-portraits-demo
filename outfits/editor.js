@@ -57,9 +57,17 @@ const groups = [
   ["Борода и усы", "beard beard_growth moustache moustache_growth"],
 ];
 
+const saveRecipe = document.querySelector("#save-recipe");
+const loadRecipe = document.querySelector("#load-recipe");
+const researchNote = document.querySelector("#research-note");
+
 const controls = new Map();
 let catalog;
 let lastRecipe;
+let restoredRecipe;
+let preservedAppearance;
+let recipeUrl;
+let pendingImport;
 let automaticMaterialsReady = false;
 let presetControls;
 let timer;
@@ -177,12 +185,13 @@ function invalidateAutomaticMaterials() {
 }
 
 function updateOptions() {
-  const generated = !presetControls;
+  const generated = !presetControls && !restoredRecipe;
   const restrictions = generated ? catalog.generated_age_restrictions : catalog.age_restrictions;
   const equipmentCasts = generated ? catalog.generated_equipment_casts : catalog.equipment_casts;
   const wardrobes = catalog.profile_cultures;
-  const cultures = generated && profile.value !== "free"
-    ? wardrobes[profile.value] ?? Object.values(wardrobes).flat()
+  const activeProfile = profile.value || lastRecipe?.profile;
+  const cultures = generated && activeProfile !== "free"
+    ? wardrobes[activeProfile] ?? Object.values(wardrobes).flat()
     : [null];
   const cast = document.getElementById("appearance-cast").value;
   const age = document.getElementById("appearance-age").value;
@@ -196,6 +205,10 @@ function updateOptions() {
       cultures.map(culture => ({ base, years, culture }))));
 
   function fits({ kind, field }, value, { base, years, culture }) {
+    if (kind === "equipment") {
+      base = cast || lastRecipe?.appearance?.cast || base;
+      years = age || lastRecipe?.appearance?.age || years;
+    }
     const groups = kind === "appearance" ? catalog.exclusive_traits : equipmentCasts;
     const required = groups?.[field]?.[value];
     const itemCultures = kind === "equipment" && culture && catalog.equipment_cultures[field][value];
@@ -234,7 +247,8 @@ function updateOptions() {
       const title = (field === "cast" && childLabels[option.value]) || definition.values[option.value];
       const outside = kind === "appearance" ? outsideProfile(field, option.value) : outsideEstate(field, option.value);
       const label = kind === "appearance" ? "вне автонабора" : "вне сословного набора";
-      option.textContent = outside ? title + " · " + label : title;
+      const research = kind === "equipment" && catalog.research_items?.some(item => item.selection[field] === option.value);
+      option.textContent = research ? title + " · исследовательский просмотр" : outside ? title + " · " + label : title;
     }
   }
   updateMaterials();
@@ -269,6 +283,11 @@ function updateNotes(recipe) {
     if (jewelryHidden && field === "jewelry" &&
         jewelryGroups.chest?.includes(gear.jewelry)) {
       message = "Доспех закрывает украшение";
+    }
+    if (field === "jewelry" && ["riasna", "kolt"].includes(gear.jewelry) && headgear !== "rus_diamond_band") {
+      message = recipe?.appearance?.age === "child"
+        ? "В рисунке нет детского головного убора с опорой для этого украшения"
+        : "Для видимого крепления выберите очелье с ромбами";
     }
     if (field === "jewelry" && jewelryGroups.bracelet?.includes(gear.jewelry) &&
         (catalog.bracelet_hidden_by?.includes(outfit) || gear.vestment === "epimanikia")) {
@@ -311,7 +330,8 @@ function updateNotes(recipe) {
 }
 
 function selection() {
-  const payload = { ...sampleModes, seed: seed.value, generate: !presetControls, appearance: {}, equipment: {} };
+  const payload = { ...(restoredRecipe || sampleModes), seed: seed.value, generate: !presetControls && !restoredRecipe,
+    appearance: { ...preservedAppearance }, equipment: {} };
   if (profile.value) payload.profile = profile.value;
   if (estate.value) payload.estate = estate.value;
   for (const [select, { kind, field }] of controls) {
@@ -321,7 +341,7 @@ function selection() {
 }
 
 function exampleArtwork(id) {
-  return Object.fromEntries(artworkViews.map(view => [view, `./${id}-${view}.svg?v=shield-fit-1`]));
+  return Object.fromEntries(artworkViews.map(view => [view, `./${id}-${view}.svg?v=catalog-audit-1`]));
 }
 
 function setArtworkSource(image, download, url) {
@@ -376,7 +396,7 @@ function setPortraitView(view) {
 
 function startRenderer() {
   if (renderer) return;
-  const worker = new Worker("./renderer-worker.js?v=shield-fit-1", { name: "Rus13" });
+  const worker = new Worker("./renderer-worker.js?v=catalog-audit-1", { name: "Rus13" });
   renderer = worker;
   function fail() {
     worker.terminate();
@@ -406,6 +426,18 @@ function startRenderer() {
       if (data.kind !== "rendered") throw new Error(data.error || "Проверьте настройки и попробуйте снова.");
       showArtwork(data.result);
       lastRecipe = data.result.recipe;
+      if (pendingImport === data.id) {
+        restoredRecipe = lastRecipe;
+        presetControls = new Set([profile, estate, ...controls.keys()]);
+        preservedAppearance = undefined;
+        seed.value = lastRecipe.seed;
+        profile.value = lastRecipe.profile || "";
+        estate.value = lastRecipe.estate || "";
+        for (const [select, { kind, field }] of controls) select.value = lastRecipe[kind][field] || "";
+        pendingImport = undefined;
+      }
+      if (restoredRecipe) restoredRecipe = lastRecipe;
+      updateRecipeDownload(lastRecipe);
       automaticMaterialsReady = true;
       updateOptions();
       updateNotes(lastRecipe);
@@ -441,7 +473,10 @@ function applyExample(example) {
     select.value = value === "auto" ? "" : value ?? "";
   }
   setActiveExample(example.id);
+  restoredRecipe = undefined;
+  preservedAppearance = undefined;
   lastRecipe = example.recipe;
+  updateRecipeDownload(lastRecipe);
   automaticMaterialsReady = true;
   updateOptions();
   updateNotes(lastRecipe);
@@ -471,6 +506,8 @@ function scheduleRender(delay = 0) {
   pendingRender = null;
   setActiveExample(null);
   artworkAvailable = false;
+  saveRecipe.removeAttribute("href");
+  saveRecipe.setAttribute("aria-disabled", "true");
   updatePortrait();
   setArtworkSource(card, cardDownload, artworkSources.card);
   if (artworkSources.detail) setArtworkSource(clothingDetailDrawing, clothingDetailDownload, artworkSources.detail);
@@ -486,7 +523,7 @@ function scheduleRender(delay = 0) {
 async function loadCatalog() {
   setStatus("Загружаем редактор…", { busy: true });
   try {
-    const response = await fetch("./studio.json?v=shield-fit-1");
+    const response = await fetch("./studio.json?v=catalog-audit-1");
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const { catalog: data, examples } = await response.json();
     profile.replaceChildren(new Option("По seed", ""));
@@ -560,6 +597,8 @@ function useAutomatic(changed) {
 }
 
 function reseed(delay = 0) {
+  restoredRecipe = undefined;
+  preservedAppearance = undefined;
   useAutomatic();
   invalidateAutomaticMaterials();
   updateOptions();
@@ -577,6 +616,12 @@ editor.addEventListener("change", event => {
   if (!control && target !== profile && target !== estate) return;
   if (control?.kind === "equipment" && !target.value) clearMaterialChoices(control.field);
   if (target === profile || target === estate) useAutomatic(target);
+  if ((control?.kind === "equipment" || target === estate) && lastRecipe && !restoredRecipe) {
+    preservedAppearance = { ...lastRecipe.appearance };
+  } else if (control?.kind === "appearance" || target === profile) {
+    preservedAppearance = undefined;
+    restoredRecipe = undefined;
+  }
   else presetControls?.delete(target);
   if (!catalog.material_slots?.[control?.field]) invalidateAutomaticMaterials();
   updateOptions();
@@ -587,6 +632,8 @@ reset.addEventListener("click", () => {
   useAutomatic();
   for (const select of [profile, estate, ...controls.keys()]) select.value = "";
   lastRecipe = undefined;
+  restoredRecipe = undefined;
+  preservedAppearance = undefined;
   automaticMaterialsReady = false;
   updateOptions();
   scheduleRender();
@@ -598,4 +645,36 @@ retry.addEventListener("click", () => {
 
 const linkedSection = document.getElementById(window.location.hash.slice(1));
 if (linkedSection instanceof HTMLDetailsElement) linkedSection.open = true;
+
+function updateRecipeDownload(recipe) {
+  const previous = recipeUrl;
+  recipeUrl = URL.createObjectURL(new Blob([JSON.stringify(recipe, null, 2) + "\n"], { type: "application/json" }));
+  saveRecipe.href = recipeUrl;
+  saveRecipe.removeAttribute("aria-disabled");
+  if (previous) URL.revokeObjectURL(previous);
+  researchNote.textContent = recipe.research_items?.length
+    ? "Исследовательский просмотр. Предмет исключён из автоматического подбора. " + recipe.research_items.map(item => item.note).join(" ") : "";
+  researchNote.hidden = !researchNote.textContent;
+}
+
+loadRecipe.addEventListener("change", async () => {
+  const file = loadRecipe.files[0];
+  if (!file) return;
+  try {
+    if (file.size > 32768) throw new Error("Файл рецепта должен быть не больше 32 КБ.");
+    const payload = JSON.parse(await file.text());
+    clearTimeout(timer);
+    pendingImport = ++renderId;
+    const job = { id: pendingImport, payload };
+    startRenderer();
+    artworkAvailable = false;
+    saveRecipe.removeAttribute("href");
+    setStatus("Открываем рецепт…", { busy: true });
+    if (ready) renderer.postMessage(job);
+    else pendingRender = job;
+  } catch (error) {
+    setStatus(`Не удалось открыть рецепт. ${error.message}`, { error: true });
+  } finally { loadRecipe.value = ""; }
+});
+
 loadCatalog();
