@@ -310,7 +310,7 @@ function selection() {
 }
 
 function exampleArtwork(id) {
-  return Object.fromEntries(artworkViews.map(view => [view, `./${id}-${view}.svg`]));
+  return Object.fromEntries(artworkViews.map(view => [view, `./${id}-${view}.svg?v=hair-face-fit`]));
 }
 
 function setArtworkSource(image, download, url) {
@@ -365,7 +365,7 @@ function setPortraitView(view) {
 
 function startRenderer() {
   if (renderer) return;
-  const worker = new Worker("./renderer-worker.js?v=clothing-materials", { name: "Rus13" });
+  const worker = new Worker("./renderer-worker.js?v=hair-face-fit", { name: "Rus13" });
   renderer = worker;
   function fail() {
     worker.terminate();
