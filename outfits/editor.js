@@ -310,7 +310,7 @@ function selection() {
 }
 
 function exampleArtwork(id) {
-  return Object.fromEntries(artworkViews.map(view => [view, `./${id}-${view}.svg?v=hair-overlap-fit`]));
+  return Object.fromEntries(artworkViews.map(view => [view, `./${id}-${view}.svg?v=tonsure-fit`]));
 }
 
 function setArtworkSource(image, download, url) {
@@ -365,7 +365,7 @@ function setPortraitView(view) {
 
 function startRenderer() {
   if (renderer) return;
-  const worker = new Worker("./renderer-worker.js?v=hair-overlap-fit", { name: "Rus13" });
+  const worker = new Worker("./renderer-worker.js?v=tonsure-fit", { name: "Rus13" });
   renderer = worker;
   function fail() {
     worker.terminate();
