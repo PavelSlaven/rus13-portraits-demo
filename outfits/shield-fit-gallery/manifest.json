@@ -1,0 +1,926 @@
+[
+  {
+    "id": "round-clothes-medium-held-none",
+    "shield": "round",
+    "layer": "clothes",
+    "body": "medium",
+    "position": "held",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "b2e5cf9d453a50cf48af548754aeccd4bae64e3e95fa3c17846b70dd7095953e",
+      "card": "96e12a3856fdf77890f3f1d5a7eea412c2159fa53a7b4d40a7780b7d96096a6a"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "round-clothes-medium-back-none",
+    "shield": "round",
+    "layer": "clothes",
+    "body": "medium",
+    "position": "back",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "afea11c08c633e7e7ffc99433082fc0a8edce6ee2d3bdee03f29b2eed03f2c8e",
+      "card": "96e12a3856fdf77890f3f1d5a7eea412c2159fa53a7b4d40a7780b7d96096a6a"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "round-armour-medium-held-none",
+    "shield": "round",
+    "layer": "armour",
+    "body": "medium",
+    "position": "held",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "2749f6653af39e5d341786305a307135effea432ceac797bec6cc2411bfbc843",
+      "card": "91f46e09055733c927b6623c8657b6839076eda26c86a084c20f70e8123bca92"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "round-armour-medium-back-none",
+    "shield": "round",
+    "layer": "armour",
+    "body": "medium",
+    "position": "back",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "7665500086d79898201725733e90ec60f0539cc44625708ccfeb5bf0dc3d8bbf",
+      "card": "91f46e09055733c927b6623c8657b6839076eda26c86a084c20f70e8123bca92"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "kite-clothes-medium-held-none",
+    "shield": "kite",
+    "layer": "clothes",
+    "body": "medium",
+    "position": "held",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "58c542beacf383164da8ef2353c57f098d6cee0b897183647d17848ba6706107",
+      "card": "96e12a3856fdf77890f3f1d5a7eea412c2159fa53a7b4d40a7780b7d96096a6a"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "kite-clothes-medium-back-none",
+    "shield": "kite",
+    "layer": "clothes",
+    "body": "medium",
+    "position": "back",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "f7da748b22161a13da041194fd72d0c468984a9f9c234820c62892dd45608ab9",
+      "card": "96e12a3856fdf77890f3f1d5a7eea412c2159fa53a7b4d40a7780b7d96096a6a"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "kite-armour-medium-held-none",
+    "shield": "kite",
+    "layer": "armour",
+    "body": "medium",
+    "position": "held",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "7e59164fbf2ddc5f3753feb7eddc38c6877644b5ee0935c38b0b88708a6fca1e",
+      "card": "91f46e09055733c927b6623c8657b6839076eda26c86a084c20f70e8123bca92"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "kite-armour-medium-back-none",
+    "shield": "kite",
+    "layer": "armour",
+    "body": "medium",
+    "position": "back",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "c9a62aa6398f0f2c9b67400e07288d6a3de8082b4471dd99fd1c341ace0acf33",
+      "card": "91f46e09055733c927b6623c8657b6839076eda26c86a084c20f70e8123bca92"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "triangular-clothes-medium-held-none",
+    "shield": "triangular",
+    "layer": "clothes",
+    "body": "medium",
+    "position": "held",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "520a0f9f8cfc4cb291f69ffc8c83acca06bee04d454e2668b5022d23a8c4c801",
+      "card": "96e12a3856fdf77890f3f1d5a7eea412c2159fa53a7b4d40a7780b7d96096a6a"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "triangular-clothes-medium-back-none",
+    "shield": "triangular",
+    "layer": "clothes",
+    "body": "medium",
+    "position": "back",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "7b22db8e033f0bda3c3774a39b0e138be4e2e7f29111f89760b4229dbd3b2de3",
+      "card": "96e12a3856fdf77890f3f1d5a7eea412c2159fa53a7b4d40a7780b7d96096a6a"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "triangular-armour-medium-held-none",
+    "shield": "triangular",
+    "layer": "armour",
+    "body": "medium",
+    "position": "held",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "90bba5c5cd97cede1cf32bdd359b40898099cc262d8cfe2e9d48167d7904685e",
+      "card": "91f46e09055733c927b6623c8657b6839076eda26c86a084c20f70e8123bca92"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "triangular-armour-medium-back-none",
+    "shield": "triangular",
+    "layer": "armour",
+    "body": "medium",
+    "position": "back",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "838ea5f02a5ef1250bead79e06fd8075e6e1080f00e3c230911ba9dfb7f0ecb0",
+      "card": "91f46e09055733c927b6623c8657b6839076eda26c86a084c20f70e8123bca92"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "novgorod_george-clothes-medium-held-none",
+    "shield": "novgorod_george",
+    "layer": "clothes",
+    "body": "medium",
+    "position": "held",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "d625038b030d430f69596bf6432f0d53b648a0e516debc3848d495531616edca",
+      "card": "96e12a3856fdf77890f3f1d5a7eea412c2159fa53a7b4d40a7780b7d96096a6a"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "novgorod_george-clothes-medium-back-none",
+    "shield": "novgorod_george",
+    "layer": "clothes",
+    "body": "medium",
+    "position": "back",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "3b9b6039e653ea98edbd81bb4cf34bfa7c4c90ebeeb0139eb27e8a88607f7145",
+      "card": "96e12a3856fdf77890f3f1d5a7eea412c2159fa53a7b4d40a7780b7d96096a6a"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "novgorod_george-armour-medium-held-none",
+    "shield": "novgorod_george",
+    "layer": "armour",
+    "body": "medium",
+    "position": "held",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "4fa31f6d9176333d172410cad666034490ec9efeaaebead7a719de3889953ceb",
+      "card": "91f46e09055733c927b6623c8657b6839076eda26c86a084c20f70e8123bca92"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "novgorod_george-armour-medium-back-none",
+    "shield": "novgorod_george",
+    "layer": "armour",
+    "body": "medium",
+    "position": "back",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "74ab53d644321915052e33864abedbc9e3dea089dd831dab919941876932f401",
+      "card": "91f46e09055733c927b6623c8657b6839076eda26c86a084c20f70e8123bca92"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "novgorod_dish-clothes-medium-held-none",
+    "shield": "novgorod_dish",
+    "layer": "clothes",
+    "body": "medium",
+    "position": "held",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "3812b476f42ebab0e7e03c8fa1ac1c274e1198d750856e6f75ec3b1da9a9ab81",
+      "card": "96e12a3856fdf77890f3f1d5a7eea412c2159fa53a7b4d40a7780b7d96096a6a"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "novgorod_dish-clothes-medium-back-none",
+    "shield": "novgorod_dish",
+    "layer": "clothes",
+    "body": "medium",
+    "position": "back",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "e010a98a5c684811ed023deaaa547ad73f54083dd679156fce10589d62e8de25",
+      "card": "96e12a3856fdf77890f3f1d5a7eea412c2159fa53a7b4d40a7780b7d96096a6a"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "novgorod_dish-armour-medium-held-none",
+    "shield": "novgorod_dish",
+    "layer": "armour",
+    "body": "medium",
+    "position": "held",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "086293905d038e4c981750fe4abe218f899fba564491c6d4c2c26b537521eda7",
+      "card": "91f46e09055733c927b6623c8657b6839076eda26c86a084c20f70e8123bca92"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "novgorod_dish-armour-medium-back-none",
+    "shield": "novgorod_dish",
+    "layer": "armour",
+    "body": "medium",
+    "position": "back",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "c183cd15d5a17505eea834fa446fd0c7ca4cbf8210ac0413c7d2a118996917b5",
+      "card": "91f46e09055733c927b6623c8657b6839076eda26c86a084c20f70e8123bca92"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "yuriev_lion-clothes-medium-held-none",
+    "shield": "yuriev_lion",
+    "layer": "clothes",
+    "body": "medium",
+    "position": "held",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "479963f7e9594aaf8377f37f9f575451f369a9c9453a8a7b0dbe0440948520dc",
+      "card": "96e12a3856fdf77890f3f1d5a7eea412c2159fa53a7b4d40a7780b7d96096a6a"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "yuriev_lion-clothes-medium-back-none",
+    "shield": "yuriev_lion",
+    "layer": "clothes",
+    "body": "medium",
+    "position": "back",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "802f7b183b96aac150f71c1aeb66d57e4ceaf3dd99a3732b59e894d77826c29b",
+      "card": "96e12a3856fdf77890f3f1d5a7eea412c2159fa53a7b4d40a7780b7d96096a6a"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "yuriev_lion-armour-medium-held-none",
+    "shield": "yuriev_lion",
+    "layer": "armour",
+    "body": "medium",
+    "position": "held",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "642f5742a7681e5bb627891827ba606a74a6fb069ff01c712d78f085b92dbfbb",
+      "card": "91f46e09055733c927b6623c8657b6839076eda26c86a084c20f70e8123bca92"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "yuriev_lion-armour-medium-back-none",
+    "shield": "yuriev_lion",
+    "layer": "armour",
+    "body": "medium",
+    "position": "back",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "2d1328cc501f75765eae66a819ff4dd120756ecc0d06d8a4ea995b2f8cb416c7",
+      "card": "91f46e09055733c927b6623c8657b6839076eda26c86a084c20f70e8123bca92"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "gokstad-clothes-medium-held-none",
+    "shield": "gokstad",
+    "layer": "clothes",
+    "body": "medium",
+    "position": "held",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "7a77366dd6c0c7d76756d7bdaad4144e04ad88cb5bdedae2996c8fcc5152def5",
+      "card": "96e12a3856fdf77890f3f1d5a7eea412c2159fa53a7b4d40a7780b7d96096a6a"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "gokstad-clothes-medium-back-none",
+    "shield": "gokstad",
+    "layer": "clothes",
+    "body": "medium",
+    "position": "back",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "67936a8b93f8f137e986bacab8f4c61b4709376efbb13c6a00c8a6733ff41651",
+      "card": "96e12a3856fdf77890f3f1d5a7eea412c2159fa53a7b4d40a7780b7d96096a6a"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "gokstad-armour-medium-held-none",
+    "shield": "gokstad",
+    "layer": "armour",
+    "body": "medium",
+    "position": "held",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "0b148b8818895bd4a66f603404dfe102fa7e049525b9cdcfa1b5ead019ffed91",
+      "card": "91f46e09055733c927b6623c8657b6839076eda26c86a084c20f70e8123bca92"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "gokstad-armour-medium-back-none",
+    "shield": "gokstad",
+    "layer": "armour",
+    "body": "medium",
+    "position": "back",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "6467a53c4995ad919865a4fa6207a5b7ffc686dfabc0f6b3bc39f398772600ce",
+      "card": "91f46e09055733c927b6623c8657b6839076eda26c86a084c20f70e8123bca92"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "szczecin_painted-clothes-medium-held-none",
+    "shield": "szczecin_painted",
+    "layer": "clothes",
+    "body": "medium",
+    "position": "held",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "bc8f04ab26a9b06f4eab6bd1f8d4a71db08f479328292f44d29edb70d2ec60dc",
+      "card": "96e12a3856fdf77890f3f1d5a7eea412c2159fa53a7b4d40a7780b7d96096a6a"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "szczecin_painted-clothes-medium-back-none",
+    "shield": "szczecin_painted",
+    "layer": "clothes",
+    "body": "medium",
+    "position": "back",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "c18af120b4e5072acefdda80b067cc89cb03c01f2f54704fde8ee67037ed4979",
+      "card": "96e12a3856fdf77890f3f1d5a7eea412c2159fa53a7b4d40a7780b7d96096a6a"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "szczecin_painted-armour-medium-held-none",
+    "shield": "szczecin_painted",
+    "layer": "armour",
+    "body": "medium",
+    "position": "held",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "5bc64ea7c53a8c5f9508d1ddf9f5a6709bf80ae45bf27e81a0436e1a0df56b36",
+      "card": "91f46e09055733c927b6623c8657b6839076eda26c86a084c20f70e8123bca92"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "szczecin_painted-armour-medium-back-none",
+    "shield": "szczecin_painted",
+    "layer": "armour",
+    "body": "medium",
+    "position": "back",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "1ae80bd6ca128c45f19538e5cb87e1e84d7b12f074b676f898aad89d8957cf4a",
+      "card": "91f46e09055733c927b6623c8657b6839076eda26c86a084c20f70e8123bca92"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "lewis-clothes-medium-held-none",
+    "shield": "lewis",
+    "layer": "clothes",
+    "body": "medium",
+    "position": "held",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "e00531257ed6b28c4ba24091cb2684d411db5469d35fbf87f9c958a98bec3440",
+      "card": "96e12a3856fdf77890f3f1d5a7eea412c2159fa53a7b4d40a7780b7d96096a6a"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "lewis-clothes-medium-back-none",
+    "shield": "lewis",
+    "layer": "clothes",
+    "body": "medium",
+    "position": "back",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "dfa698864497852579c176982f2830e96025fc08b97586dfe72f3c9ac8189c86",
+      "card": "96e12a3856fdf77890f3f1d5a7eea412c2159fa53a7b4d40a7780b7d96096a6a"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "lewis-armour-medium-held-none",
+    "shield": "lewis",
+    "layer": "armour",
+    "body": "medium",
+    "position": "held",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "47fc391d6eafc973fb547a981d90a978b173f2e6daa1653b7c7906ae7801ed3a",
+      "card": "91f46e09055733c927b6623c8657b6839076eda26c86a084c20f70e8123bca92"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "lewis-armour-medium-back-none",
+    "shield": "lewis",
+    "layer": "armour",
+    "body": "medium",
+    "position": "back",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "58d41c1e1be72932e7f8639bd43e3571cdfce804e22dc1d7ec988f8605f764ab",
+      "card": "91f46e09055733c927b6623c8657b6839076eda26c86a084c20f70e8123bca92"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "round-armour-slim-held-none",
+    "shield": "round",
+    "layer": "armour",
+    "body": "slim",
+    "position": "held",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "441f7618709cb6303f59598a1ed8e26b5241a0c86a400dfc6cdaaa7e3ff85d8a",
+      "card": "f0830369c7e639e2465c09ec061a42e4c7174b79553a15af484978e999e909d8"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "round-armour-slim-back-none",
+    "shield": "round",
+    "layer": "armour",
+    "body": "slim",
+    "position": "back",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "1d059810ec244feaccb44632c549d1c5efe38f7aa4813a356e66512fc5aaba26",
+      "card": "f0830369c7e639e2465c09ec061a42e4c7174b79553a15af484978e999e909d8"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "round-armour-athletic-held-none",
+    "shield": "round",
+    "layer": "armour",
+    "body": "athletic",
+    "position": "held",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "cf30ec3809a9ad2fd7ae4eb8840371a338c979e62b61bdab0ed8275ae823347a",
+      "card": "67cef38954c57affe15b3cfb545ee6f31196405e242d26897adcf0056e2990d7"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "round-armour-athletic-back-none",
+    "shield": "round",
+    "layer": "armour",
+    "body": "athletic",
+    "position": "back",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "2eff9912ae9373b98f3445d8884afc3c047744a91dcacd8f5d58dc6420d492af",
+      "card": "67cef38954c57affe15b3cfb545ee6f31196405e242d26897adcf0056e2990d7"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "round-armour-full-held-none",
+    "shield": "round",
+    "layer": "armour",
+    "body": "full",
+    "position": "held",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "ca00ebc3ea2d202eabb2f1caa3f65a07c682562c9f7a9cf0488ca7ad3e2a37a6",
+      "card": "0cca8bfe6f761886914e0d33abefab8833b1a349985d7aafd738992c9811dba9"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "round-armour-full-back-none",
+    "shield": "round",
+    "layer": "armour",
+    "body": "full",
+    "position": "back",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "d65702b5159f3ff0c144cc72e12e3650ce7a532e9423f8a838488b3bfaead35f",
+      "card": "0cca8bfe6f761886914e0d33abefab8833b1a349985d7aafd738992c9811dba9"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "kite-armour-slim-held-none",
+    "shield": "kite",
+    "layer": "armour",
+    "body": "slim",
+    "position": "held",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "677505c8e54d0e9acc1868091ba7a115b7cdf8f8a561209d5697ebd871fa6e15",
+      "card": "f0830369c7e639e2465c09ec061a42e4c7174b79553a15af484978e999e909d8"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "kite-armour-slim-back-none",
+    "shield": "kite",
+    "layer": "armour",
+    "body": "slim",
+    "position": "back",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "4c5475967ff0989e43b7c6eb66f5f43c5ad9174280ac97e93052d9349fa8fb19",
+      "card": "f0830369c7e639e2465c09ec061a42e4c7174b79553a15af484978e999e909d8"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "kite-armour-athletic-held-none",
+    "shield": "kite",
+    "layer": "armour",
+    "body": "athletic",
+    "position": "held",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "3af1f701fcb17ff053902095c48da6786cb9379956b30ef9ff222cabf88b667a",
+      "card": "67cef38954c57affe15b3cfb545ee6f31196405e242d26897adcf0056e2990d7"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "kite-armour-athletic-back-none",
+    "shield": "kite",
+    "layer": "armour",
+    "body": "athletic",
+    "position": "back",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "c6ad93ac56a368df2d6606b64e99039fe1bd6ba2b85c2563019ee3483643d005",
+      "card": "67cef38954c57affe15b3cfb545ee6f31196405e242d26897adcf0056e2990d7"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "kite-armour-full-held-none",
+    "shield": "kite",
+    "layer": "armour",
+    "body": "full",
+    "position": "held",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "c3323453e658421a3212fc3838d699ea3ea0ce5c6ed34eb3f6b2cdd877acd07c",
+      "card": "0cca8bfe6f761886914e0d33abefab8833b1a349985d7aafd738992c9811dba9"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "kite-armour-full-back-none",
+    "shield": "kite",
+    "layer": "armour",
+    "body": "full",
+    "position": "back",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "da6f838e16ece8ff74d82ea713d14823122dae47dfdae3e21d39aab0fc2e360f",
+      "card": "0cca8bfe6f761886914e0d33abefab8833b1a349985d7aafd738992c9811dba9"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "triangular-armour-slim-held-none",
+    "shield": "triangular",
+    "layer": "armour",
+    "body": "slim",
+    "position": "held",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "7ba5a97a56beab97d8d83ba8bb13b50a600fd6fb6a4e554bf77c537bf0108898",
+      "card": "f0830369c7e639e2465c09ec061a42e4c7174b79553a15af484978e999e909d8"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "triangular-armour-slim-back-none",
+    "shield": "triangular",
+    "layer": "armour",
+    "body": "slim",
+    "position": "back",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "36d5263e7c55702042cad94c16f388b990e5d623b7882dbe32d49967b94e95b8",
+      "card": "f0830369c7e639e2465c09ec061a42e4c7174b79553a15af484978e999e909d8"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "triangular-armour-athletic-held-none",
+    "shield": "triangular",
+    "layer": "armour",
+    "body": "athletic",
+    "position": "held",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "e8a84817183c7e797a6d1f047ad5c74e53c3782eb0067862b74495ed8f6d4626",
+      "card": "67cef38954c57affe15b3cfb545ee6f31196405e242d26897adcf0056e2990d7"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "triangular-armour-athletic-back-none",
+    "shield": "triangular",
+    "layer": "armour",
+    "body": "athletic",
+    "position": "back",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "b8b640ca869c7c96e076b9ad357db49b37dc9feaaf223037d03db6dd258ee6ac",
+      "card": "67cef38954c57affe15b3cfb545ee6f31196405e242d26897adcf0056e2990d7"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "triangular-armour-full-held-none",
+    "shield": "triangular",
+    "layer": "armour",
+    "body": "full",
+    "position": "held",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "d40761b8778c544baf1578ad4efab6d12c8913c6dddfca288ffaae96a77c9378",
+      "card": "0cca8bfe6f761886914e0d33abefab8833b1a349985d7aafd738992c9811dba9"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "triangular-armour-full-back-none",
+    "shield": "triangular",
+    "layer": "armour",
+    "body": "full",
+    "position": "back",
+    "cloak": "none",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "a2a08d33d15b44d3a66bcde276966ed352d668347f2188524843623891ebe1c5",
+      "card": "0cca8bfe6f761886914e0d33abefab8833b1a349985d7aafd738992c9811dba9"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "round-armour-medium-held-gotland_open",
+    "shield": "round",
+    "layer": "armour",
+    "body": "medium",
+    "position": "held",
+    "cloak": "gotland_open",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "1505097179491f3215798deba84bf27ed03355d8d3621b8272c6314f124fd243",
+      "card": "2912d53fe77a2a8ba86ba538feab58165d7694d61561d9cd700d1a3ed594ae43"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "round-armour-medium-held-novgorod_mantle",
+    "shield": "round",
+    "layer": "armour",
+    "body": "medium",
+    "position": "held",
+    "cloak": "novgorod_mantle",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "99d5d9a48642a31134f2d814416d3603b7c3d413ce8a0a24c0fb7bc3c5a93b14",
+      "card": "e8a8f34d38874f9c3081a9d3ace6b6371af1515638eb9f1fb0c5f93b565dac50"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "round-armour-medium-back-gotland_open",
+    "shield": "round",
+    "layer": "armour",
+    "body": "medium",
+    "position": "back",
+    "cloak": "gotland_open",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "771a3d0a6fd7a4c5e208b13d1f1768cbd1beb5b7aa905bfdebcfe4215a0ef696",
+      "card": "2912d53fe77a2a8ba86ba538feab58165d7694d61561d9cd700d1a3ed594ae43"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "round-armour-medium-back-novgorod_mantle",
+    "shield": "round",
+    "layer": "armour",
+    "body": "medium",
+    "position": "back",
+    "cloak": "novgorod_mantle",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "edf6760e6879ed47d11749a9af6a56e916ca300dfb777ffe44ba204b279ca7b8",
+      "card": "e8a8f34d38874f9c3081a9d3ace6b6371af1515638eb9f1fb0c5f93b565dac50"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "kite-armour-medium-held-gotland_open",
+    "shield": "kite",
+    "layer": "armour",
+    "body": "medium",
+    "position": "held",
+    "cloak": "gotland_open",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "2e5317438c283dad29ece182e9422bd4fe1c138d308d0754784ae349994ef30b",
+      "card": "2912d53fe77a2a8ba86ba538feab58165d7694d61561d9cd700d1a3ed594ae43"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "kite-armour-medium-held-novgorod_mantle",
+    "shield": "kite",
+    "layer": "armour",
+    "body": "medium",
+    "position": "held",
+    "cloak": "novgorod_mantle",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "dbaf30aa3fec721934d93e6508735fdc3d831b356d5735b841778a4049d806da",
+      "card": "e8a8f34d38874f9c3081a9d3ace6b6371af1515638eb9f1fb0c5f93b565dac50"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "kite-armour-medium-back-gotland_open",
+    "shield": "kite",
+    "layer": "armour",
+    "body": "medium",
+    "position": "back",
+    "cloak": "gotland_open",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "81482d1f32cc07cc92b1009f078b528ce3e1b0f3c77f155f97eb99d9499b5d19",
+      "card": "2912d53fe77a2a8ba86ba538feab58165d7694d61561d9cd700d1a3ed594ae43"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "kite-armour-medium-back-novgorod_mantle",
+    "shield": "kite",
+    "layer": "armour",
+    "body": "medium",
+    "position": "back",
+    "cloak": "novgorod_mantle",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "a5c5df4e04b31826f89967f85a9b381e5b54ab49ceb7dba2d3fbc1e368becf34",
+      "card": "e8a8f34d38874f9c3081a9d3ace6b6371af1515638eb9f1fb0c5f93b565dac50"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "triangular-armour-medium-held-gotland_open",
+    "shield": "triangular",
+    "layer": "armour",
+    "body": "medium",
+    "position": "held",
+    "cloak": "gotland_open",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "0acc0c2c557116d3f733bf8a21d12d11d85bb04aca409d354c528ab86260e524",
+      "card": "2912d53fe77a2a8ba86ba538feab58165d7694d61561d9cd700d1a3ed594ae43"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "triangular-armour-medium-held-novgorod_mantle",
+    "shield": "triangular",
+    "layer": "armour",
+    "body": "medium",
+    "position": "held",
+    "cloak": "novgorod_mantle",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "f39fd5503ec6df21f2f2b6d0efb667d9e6bfa7289609373ff2a967eed13e5548",
+      "card": "e8a8f34d38874f9c3081a9d3ace6b6371af1515638eb9f1fb0c5f93b565dac50"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "triangular-armour-medium-back-gotland_open",
+    "shield": "triangular",
+    "layer": "armour",
+    "body": "medium",
+    "position": "back",
+    "cloak": "gotland_open",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "7b47d1b5e0e300f1034c1645bee1d7a3aa8e460ccf65f92b0c84f7f951561b09",
+      "card": "2912d53fe77a2a8ba86ba538feab58165d7694d61561d9cd700d1a3ed594ae43"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  },
+  {
+    "id": "triangular-armour-medium-back-novgorod_mantle",
+    "shield": "triangular",
+    "layer": "armour",
+    "body": "medium",
+    "position": "back",
+    "cloak": "novgorod_mantle",
+    "seed": "novgorod-05",
+    "sha256": {
+      "full": "4bf02595e66bc15fc4a487f1ab3441f5a0ec454e5fcacb7bba0da142f0ff8114",
+      "card": "e8a8f34d38874f9c3081a9d3ace6b6371af1515638eb9f1fb0c5f93b565dac50"
+    },
+    "card_source": "editor.render_payload(payload)['card']"
+  }
+]

@@ -1,0 +1,23 @@
+{
+  "generated_at": "2026-11-17T20:39:54.943974+00:00",
+  "count": 66,
+  "full_size": [
+    320,
+    752
+  ],
+  "card_size": [
+    32,
+    32
+  ],
+  "renderer": "editor.render_payload + Chromium SVG raster",
+  "shield_count": 9,
+  "body_count": 4,
+  "card_hash_count": 7,
+  "source_sha256": {
+    "generate.py": "acaa4e2b7fbcfd2c19a96252f51772f90fcf4a85a3295d6b45f3bf1498dcc6f0",
+    "wardrobe.py": "f8b6242898687b3f5918d81387c2a8b84c66e5d1023c7e5cca2b3f391ef8c617",
+    "wardrobe_northwest_shields.py": "78432c5304df2eb434835fd0cc94a3977071e32e90ef4eb76f37ab50035d88f8",
+    "wardrobe_weapon_carry.py": "841cd7f3086b983fcbcbc02f277d7dac156cd82b180912419284535c8f396792",
+    "full_costume.py": "c0955264d969ae5219139c5c7f3a01079dc1c73e0cfdd3141200fd572f34a3a6"
+  }
+}
