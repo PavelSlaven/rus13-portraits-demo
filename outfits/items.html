@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Rus13 · Вещи по INDEX</title>
+  <link rel="stylesheet" href="./items.css?v=image-index">
+  <script src="./items.js?v=image-index" defer></script>
+</head>
+<body data-runtime="browser">
+  <main>
+    <header><a href="./">Редактор персонажа</a><h1>Rus13 · Вещи по INDEX</h1></header>
+    <div class="layout">
+      <form id="picker">
+        <label>Seed<input id="seed" value="novgorod-index-01" maxlength="256" required></label>
+        <label>Поиск по названию или ID<input id="search" type="search" placeholder="Например, коньки или wp_helmet"></label>
+        <label>Раздел<select id="category"><option value="">Все разделы</option></select></label>
+        <p id="count" class="muted"></p>
+        <label>Вещь<select id="item" size="14" aria-label="Вещь из INDEX"></select></label>
+        <div class="pair">
+          <label>Телосложение<select id="body"><option value="medium">Среднее</option><option value="slim">Худощавое</option><option value="full">Полное</option><option value="athletic">Атлетическое</option></select></label>
+          <label>Форма головы<select id="skull"><option value="">По seed</option><option value="oval">Овальная</option><option value="long">Удлинённая</option><option value="short_wide">Короткая широкая</option><option value="wide_temples">Широкие виски</option></select></label>
+        </div>
+        <label>Плащ<select id="cloak"><option value="">По выбранной вещи</option><option value="none">Без плаща</option><option value="travel_wool_cloak">Дорожный шерстяной</option><option value="novgorod_mantle">Мятель</option></select></label>
+        <button type="submit">Обновить</button>
+      </form>
+      <section aria-labelledby="item-title">
+        <h2 id="item-title">Загружаем каталог…</h2>
+        <p id="item-id" class="muted"></p>
+        <p id="item-note" class="muted"></p>
+        <p id="status" role="status">Загружаем генератор…</p>
+        <div id="preview" class="preview" hidden>
+          <div class="character">
+            <div class="view-controls"><button type="button" data-view="full" aria-pressed="true">В полный рост</button><button type="button" data-view="portrait" aria-pressed="false">По пояс</button></div>
+            <div class="character-frame"><img id="portrait" alt="Персонаж с выбранной вещью" width="320" height="752"></div>
+            <a id="save-portrait" download="rus13-full.svg">Скачать персонажа SVG</a>
+            <div class="cards"><span>32 × 32<img id="card" width="32" height="32" alt="Игровая карточка 32 на 32"></span><span>64 × 64<img id="card64" width="64" height="64" alt="Карточка 64 на 64"></span><a id="save-card" download="rus13-card.svg">Скачать карточку SVG</a></div>
+          </div>
+          <div class="object"><h3>Вещь крупно</h3><img id="object" width="320" height="260" alt="Выбранная вещь крупным планом"><a id="save-object" download="rus13-item.svg">Скачать вещь SVG</a></div>
+        </div>
+        <section id="sources" aria-label="Источники INDEX"></section>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

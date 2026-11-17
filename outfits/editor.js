@@ -37,6 +37,7 @@ const outfitDetailFields = [
   "cloak", "weapon", "carry", "shield", "shield_carry", "bow", "bow_case", "quiver",
   "belt", "belt_pouch", "accessory", "jewelry", "trousers", "leg_wraps", "footwear",
   "apron", "vestment", "gloves", "foot_lining", "insole", "shoe_accessory",
+  "arm_protection", "leg_protection", "neck_protection", "item_detail",
 ];
 const handheldNames = { weapon: "оружие", shield: "щит", bow: "лук" };
 const portraitLabels = {
@@ -310,7 +311,7 @@ function selection() {
 }
 
 function exampleArtwork(id) {
-  return Object.fromEntries(artworkViews.map(view => [view, `./${id}-${view}.svg?v=all-band-fits`]));
+  return Object.fromEntries(artworkViews.map(view => [view, `./${id}-${view}.svg?v=image-index`]));
 }
 
 function setArtworkSource(image, download, url) {
@@ -365,7 +366,7 @@ function setPortraitView(view) {
 
 function startRenderer() {
   if (renderer) return;
-  const worker = new Worker("./renderer-worker.js?v=all-band-fits", { name: "Rus13" });
+  const worker = new Worker("./renderer-worker.js?v=image-index", { name: "Rus13" });
   renderer = worker;
   function fail() {
     worker.terminate();
@@ -475,7 +476,7 @@ function scheduleRender(delay = 0) {
 async function loadCatalog() {
   setStatus("Загружаем редактор…", { busy: true });
   try {
-    const response = await fetch("./studio.json?v=clothing-materials");
+    const response = await fetch("./studio.json?v=image-index");
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const { catalog: data, examples } = await response.json();
     profile.replaceChildren(new Option("По seed", ""));
