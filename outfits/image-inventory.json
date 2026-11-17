@@ -126,11 +126,11 @@
     "category": "одежда",
     "selection": {
       "outfit": "rus_work_shirt",
-      "outfit_material": "coarse_wool"
+      "outfit_material": "hemp"
     },
     "appearance": {
       "age": "adult",
-      "cast": "women"
+      "cast": "men"
     },
     "cultures": [
       "rus"
@@ -2693,7 +2693,7 @@
       "outfit_material": "hemp"
     },
     "appearance": {
-      "cast": "women",
+      "cast": "men",
       "age": "adult"
     },
     "cultures": [
@@ -3974,7 +3974,7 @@
       "outfit_material": "brocade"
     },
     "appearance": {
-      "age": "adult",
+      "age": "child",
       "cast": "women"
     },
     "cultures": [
@@ -7199,7 +7199,7 @@
       "headgear": "shoulder_veil"
     },
     "appearance": {
-      "cast": "men",
+      "cast": "women",
       "age": "adult"
     },
     "cultures": [
@@ -13284,7 +13284,7 @@
     },
     "appearance": {
       "cast": "men",
-      "age": "adult"
+      "age": "child"
     },
     "cultures": [
       "castile"
@@ -13319,7 +13319,7 @@
     },
     "appearance": {
       "cast": "men",
-      "age": "adult"
+      "age": "child"
     },
     "cultures": [
       "iraq_iran"
@@ -13353,8 +13353,8 @@
       "headgear": "child_song_pearl_ribbons"
     },
     "appearance": {
-      "cast": "men",
-      "age": "adult"
+      "cast": "women",
+      "age": "child"
     },
     "cultures": [
       "song"
@@ -13403,7 +13403,7 @@
     },
     "appearance": {
       "cast": "men",
-      "age": "adult"
+      "age": "child"
     },
     "cultures": [
       "song"
@@ -13591,7 +13591,7 @@
       "headgear": "weimao"
     },
     "appearance": {
-      "cast": "men",
+      "cast": "women",
       "age": "adult"
     },
     "cultures": [
@@ -13882,10 +13882,10 @@
     "label": "Кастильская сая со шнуровкой",
     "category": "одежда — дальняя культура",
     "selection": {
-      "outfit": "castile_laced_saya"
+      "outfit": "court_castile_womens_saya"
     },
     "appearance": {
-      "cast": "men",
+      "cast": "women",
       "age": "adult"
     },
     "cultures": [
@@ -13909,7 +13909,7 @@
       }
     ],
     "detail": "outfit:castile_laced_saya",
-    "note": "",
+    "note": "Женская основа по сае Леонор Кастильской из Лас-Уэльгас. Существующая геометрия шнуровки адаптирована к длинному женскому подолу.",
     "component": false
   },
   {
@@ -13921,7 +13921,7 @@
     },
     "appearance": {
       "cast": "men",
-      "age": "adult"
+      "age": "child"
     },
     "cultures": [
       "castile"
@@ -13970,7 +13970,7 @@
     },
     "appearance": {
       "cast": "men",
-      "age": "adult"
+      "age": "child"
     },
     "cultures": [
       "iraq_iran"
@@ -14039,7 +14039,7 @@
       "outfit": "pellote"
     },
     "appearance": {
-      "cast": "men",
+      "cast": "women",
       "age": "adult"
     },
     "cultures": [
@@ -14089,7 +14089,7 @@
     },
     "appearance": {
       "cast": "men",
-      "age": "adult"
+      "age": "child"
     },
     "cultures": [
       "song"
@@ -14228,7 +14228,7 @@
       "outfit": "tang_jacket"
     },
     "appearance": {
-      "cast": "men",
+      "cast": "women",
       "age": "adult"
     },
     "cultures": [

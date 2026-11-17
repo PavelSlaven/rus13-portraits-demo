@@ -26,7 +26,7 @@ const views = {
   },
   clothes: {
     title: "Одежда и материалы", assetPrefix: "rus13-clothes",
-    dataFile: "./clothing-materials.json?v=image-index", link: "#clothing-materials-link",
+    dataFile: "./clothing-materials.json?v=image-index-2", link: "#clothing-materials-link",
     styleLabel: "Раздел гардероба", baseLabel: "Вещь",
   },
 };
@@ -79,7 +79,7 @@ function showArtwork(target, data, name) {
 }
 
 function startWorker() {
-  worker = new Worker("./renderer-worker.js?v=image-index", { name: "Галерея Rus13" });
+  worker = new Worker("./renderer-worker.js?v=image-index-2", { name: "Галерея Rus13" });
   worker.addEventListener("error", fail);
   worker.addEventListener("message", ({ data }) => {
     if (data.kind === "startup-error") {
