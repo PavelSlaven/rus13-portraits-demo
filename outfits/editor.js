@@ -310,7 +310,7 @@ function selection() {
 }
 
 function exampleArtwork(id) {
-  return Object.fromEntries(artworkViews.map(view => [view, `./${id}-${view}.svg?v=forehead-bands`]));
+  return Object.fromEntries(artworkViews.map(view => [view, `./${id}-${view}.svg?v=forehead-line`]));
 }
 
 function setArtworkSource(image, download, url) {
@@ -365,7 +365,7 @@ function setPortraitView(view) {
 
 function startRenderer() {
   if (renderer) return;
-  const worker = new Worker("./renderer-worker.js?v=forehead-bands", { name: "Rus13" });
+  const worker = new Worker("./renderer-worker.js?v=forehead-line", { name: "Rus13" });
   renderer = worker;
   function fail() {
     worker.terminate();
