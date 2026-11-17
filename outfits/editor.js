@@ -265,8 +265,18 @@ function updateNotes(recipe) {
     if (kind === "appearance" && select.value && outsideProfile(field, select.value)) {
       message = "Вне автонабора профиля";
     }
-    if (jewelryHidden && field === "jewelry" && select.value && select.value !== "none") {
+    const jewelryGroups = catalog.jewelry_groups ?? {};
+    if (jewelryHidden && field === "jewelry" &&
+        jewelryGroups.chest?.includes(gear.jewelry)) {
       message = "Доспех закрывает украшение";
+    }
+    if (field === "jewelry" && jewelryGroups.bracelet?.includes(gear.jewelry) &&
+        (catalog.bracelet_hidden_by?.includes(outfit) || gear.vestment === "epimanikia")) {
+      message = "Рукав или поруч закрывает браслет";
+    }
+    if (field === "jewelry" && jewelryGroups.hand?.includes(gear.jewelry) &&
+        gear.gloves && gear.gloves !== "none") {
+      message = "Рукавицы закрывают украшение кисти";
     }
     if (field === "cloak") {
       message = catalog.cloak_coverage?.[cloak] ?? message;
@@ -311,7 +321,7 @@ function selection() {
 }
 
 function exampleArtwork(id) {
-  return Object.fromEntries(artworkViews.map(view => [view, `./${id}-${view}.svg?v=clothing-fit`]));
+  return Object.fromEntries(artworkViews.map(view => [view, `./${id}-${view}.svg?v=accessory-fit-1`]));
 }
 
 function setArtworkSource(image, download, url) {
@@ -366,7 +376,7 @@ function setPortraitView(view) {
 
 function startRenderer() {
   if (renderer) return;
-  const worker = new Worker("./renderer-worker.js?v=clothing-fit", { name: "Rus13" });
+  const worker = new Worker("./renderer-worker.js?v=accessory-fit-1", { name: "Rus13" });
   renderer = worker;
   function fail() {
     worker.terminate();
@@ -476,7 +486,7 @@ function scheduleRender(delay = 0) {
 async function loadCatalog() {
   setStatus("Загружаем редактор…", { busy: true });
   try {
-    const response = await fetch("./studio.json?v=clothing-fit");
+    const response = await fetch("./studio.json?v=accessory-fit-1");
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const { catalog: data, examples } = await response.json();
     profile.replaceChildren(new Option("По seed", ""));

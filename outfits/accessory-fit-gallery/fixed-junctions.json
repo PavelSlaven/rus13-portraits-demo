@@ -1,0 +1,169 @@
+[
+  {
+    "id": "junction-built-in-cloak",
+    "group": "junction-built-in-cloak",
+    "face": "men",
+    "layer": "civil",
+    "body": "slim",
+    "cloak": "builtin",
+    "title": "Встроенный плащ",
+    "cloak_label": "Встроенный плащ",
+    "section": "junctions",
+    "detail_crop": [
+      34,
+      340,
+      286,
+      665
+    ],
+    "sha256": "13df5f8ba2cad234031a17c4c19f8ef8e4a350646fda595c78d8f7dd88af4ed3",
+    "equipment": {
+      "outfit": "cloak",
+      "cloth_color": "natural",
+      "accessory": "none",
+      "headgear": "none",
+      "background": "parchment",
+      "belt": "leather",
+      "belt_pouch": "novgorod_flap",
+      "jewelry": "none",
+      "weapon": "sheathed_sword",
+      "carry": "carried",
+      "shield": "none",
+      "bow": "none",
+      "bow_case": "none",
+      "quiver": "none"
+    },
+    "captions": [
+      "Плащ",
+      "Мягкий кожаный пояс",
+      "Новгородская сумка с тиснёным клапаном",
+      "Без украшений",
+      "Меч в ножнах"
+    ]
+  },
+  {
+    "id": "junction-epitrachelion",
+    "group": "junction-epitrachelion",
+    "face": "men",
+    "layer": "civil",
+    "body": "medium",
+    "cloak": "none",
+    "title": "Епитрахиль",
+    "cloak_label": "Епитрахиль",
+    "section": "junctions",
+    "detail_crop": [
+      78,
+      330,
+      244,
+      558
+    ],
+    "sha256": "dc275cca2dd512ccac5998adf959408d7546b8ac845b80801f6295479005c7af",
+    "equipment": {
+      "outfit": "rus_sticharion",
+      "cloth_color": "natural",
+      "accessory": "none",
+      "headgear": "none",
+      "background": "parchment",
+      "belt": "leather",
+      "belt_pouch": "novgorod_flap",
+      "jewelry": "none",
+      "cloak": "none",
+      "weapon": "none",
+      "carry": "carried",
+      "shield": "none",
+      "bow": "none",
+      "bow_case": "none",
+      "quiver": "none",
+      "vestment": "epitrachelion"
+    },
+    "captions": [
+      "Стихарь",
+      "Мягкий кожаный пояс",
+      "Новгородская сумка с тиснёным клапаном",
+      "Без украшений",
+      "Без оружия"
+    ]
+  },
+  {
+    "id": "junction-tachi-slim",
+    "group": "junction-tachi-slim",
+    "face": "men",
+    "layer": "civil",
+    "body": "slim",
+    "cloak": "none",
+    "title": "Тати · худощавое тело",
+    "cloak_label": "Тати · худощавое тело",
+    "section": "junctions",
+    "detail_crop": [
+      152,
+      352,
+      288,
+      560
+    ],
+    "sha256": "a35d13de202c1e59972830f9828016cdf1bd3d6529f0ccab69261a49a6a3ab76",
+    "equipment": {
+      "outfit": "nw_nov_svita",
+      "cloth_color": "natural",
+      "accessory": "none",
+      "headgear": "none",
+      "background": "parchment",
+      "belt": "leather",
+      "belt_pouch": "none",
+      "cloak": "none",
+      "weapon": "eur_east_japan_tachi",
+      "carry": "carried",
+      "shield": "none",
+      "bow": "none",
+      "bow_case": "none",
+      "quiver": "none"
+    },
+    "captions": [
+      "Новгородская свита поверх сорочицы",
+      "Мягкий кожаный пояс",
+      "Без поясной сумки",
+      "Без украшений",
+      "Японский тати"
+    ]
+  },
+  {
+    "id": "junction-signet-mail",
+    "group": "junction-signet-mail",
+    "face": "men",
+    "layer": "armour",
+    "body": "medium",
+    "cloak": "none",
+    "title": "Перстень на кисти",
+    "cloak_label": "Перстень на кисти",
+    "section": "junctions",
+    "detail_crop": [
+      220,
+      413,
+      287,
+      495
+    ],
+    "sha256": "df6434577ddfa3ceb45d72b9911834f997f905aee0aa6fa4fdb898b6d134db39",
+    "equipment": {
+      "outfit": "nw_mail_hauberk",
+      "cloth_color": "natural",
+      "accessory": "none",
+      "headgear": "none",
+      "background": "parchment",
+      "belt": "leather",
+      "belt_pouch": "novgorod_flap",
+      "jewelry": "signet_ring",
+      "cloak": "none",
+      "weapon": "none",
+      "carry": "carried",
+      "shield": "none",
+      "bow": "none",
+      "bow_case": "none",
+      "quiver": "none"
+    },
+    "captions": [
+      "Кольчуга поверх стёганки",
+      "Мягкий кожаный пояс",
+      "Новгородская сумка с тиснёным клапаном",
+      "Перстень-печатка",
+      "Без оружия"
+    ]
+  }
+]

@@ -1,0 +1,18 @@
+{
+  "groups": 20,
+  "cases": 60,
+  "images": 240,
+  "broken_images": 0,
+  "desktop_overflow": false,
+  "page_errors": [],
+  "women_armour_visible_groups": 4,
+  "mobile_overflow": false,
+  "supplemental_cases": 4,
+  "supplemental_sheet_size": [
+    920,
+    958
+  ],
+  "builtin_cloak_without_separate_field": true,
+  "supplemental_link_present": true,
+  "filters_unchanged": true
+}
