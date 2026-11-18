@@ -341,7 +341,7 @@ function selection() {
 }
 
 function exampleArtwork(id) {
-  return Object.fromEntries(artworkViews.map(view => [view, `./${id}-${view}.svg?v=catalog-audit-1`]));
+  return Object.fromEntries(artworkViews.map(view => [view, `./${id}-${view}.svg?v=izyaslav-trim-1`]));
 }
 
 function setArtworkSource(image, download, url) {
@@ -396,7 +396,7 @@ function setPortraitView(view) {
 
 function startRenderer() {
   if (renderer) return;
-  const worker = new Worker("./renderer-worker.js?v=catalog-audit-1", { name: "Rus13" });
+  const worker = new Worker("./renderer-worker.js?v=izyaslav-trim-1", { name: "Rus13" });
   renderer = worker;
   function fail() {
     worker.terminate();
@@ -523,7 +523,7 @@ function scheduleRender(delay = 0) {
 async function loadCatalog() {
   setStatus("Загружаем редактор…", { busy: true });
   try {
-    const response = await fetch("./studio.json?v=catalog-audit-1");
+    const response = await fetch("./studio.json?v=izyaslav-trim-1");
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const { catalog: data, examples } = await response.json();
     profile.replaceChildren(new Option("По seed", ""));
