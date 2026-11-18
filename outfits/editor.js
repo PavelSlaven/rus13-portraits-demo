@@ -348,7 +348,7 @@ function selection() {
 }
 
 function exampleArtwork(id) {
-  return Object.fromEntries(artworkViews.map(view => [view, `./${id}-${view}.svg?v=gear-grip-2`]));
+  return Object.fromEntries(artworkViews.map(view => [view, `./${id}-${view}.svg?v=wrist-fit-1`]));
 }
 
 function setArtworkSource(image, download, url) {
@@ -403,7 +403,7 @@ function setPortraitView(view) {
 
 function startRenderer() {
   if (renderer) return;
-  const worker = new Worker("./renderer-worker.js?v=gear-grip-2", { name: "Rus13" });
+  const worker = new Worker("./renderer-worker.js?v=wrist-fit-1", { name: "Rus13" });
   renderer = worker;
   function fail() {
     worker.terminate();
@@ -534,7 +534,7 @@ function scheduleRender(delay = 0) {
 async function loadCatalog() {
   setStatus("Загружаем редактор…", { busy: true });
   try {
-    const response = await fetch("./studio.json?v=gear-grip-2");
+    const response = await fetch("./studio.json?v=wrist-fit-1");
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const { catalog: data, examples } = await response.json();
     profile.replaceChildren(new Option("По seed", ""));
