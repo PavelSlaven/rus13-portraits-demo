@@ -79,7 +79,7 @@ function showArtwork(target, data, name) {
 }
 
 function startWorker() {
-  worker = new Worker("./renderer-worker.js?v=gear-fit-2", { name: "Галерея Rus13" });
+  worker = new Worker("./renderer-worker.js?v=gear-layers-1", { name: "Галерея Rus13" });
   worker.addEventListener("error", fail);
   worker.addEventListener("message", ({ data }) => {
     if (data.kind === "startup-error") {
