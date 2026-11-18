@@ -70,6 +70,8 @@ let preservedAppearance;
 let recipeUrl;
 let pendingImport;
 let automaticMaterialsReady = false;
+let equipmentBase;
+const equipmentEdits = new Map();
 let presetControls;
 let timer;
 let renderId = 0;
@@ -331,6 +333,10 @@ function updateNotes(recipe) {
 }
 
 function selection() {
+  if (equipmentBase && equipmentEdits.size) {
+    return { ...equipmentBase, generate: !presetControls && !restoredRecipe,
+      equipment_edits: Object.fromEntries(equipmentEdits) };
+  }
   const payload = { ...(restoredRecipe || sampleModes), seed: seed.value, generate: !presetControls && !restoredRecipe,
     appearance: { ...preservedAppearance }, equipment: {} };
   if (profile.value) payload.profile = profile.value;
@@ -342,7 +348,7 @@ function selection() {
 }
 
 function exampleArtwork(id) {
-  return Object.fromEntries(artworkViews.map(view => [view, `./${id}-${view}.svg?v=druzhina-early-1`]));
+  return Object.fromEntries(artworkViews.map(view => [view, `./${id}-${view}.svg?v=gear-fit-1`]));
 }
 
 function setArtworkSource(image, download, url) {
@@ -397,7 +403,7 @@ function setPortraitView(view) {
 
 function startRenderer() {
   if (renderer) return;
-  const worker = new Worker("./renderer-worker.js?v=druzhina-early-1", { name: "Rus13" });
+  const worker = new Worker("./renderer-worker.js?v=gear-fit-1", { name: "Rus13" });
   renderer = worker;
   function fail() {
     worker.terminate();
@@ -427,6 +433,8 @@ function startRenderer() {
       if (data.kind !== "rendered") throw new Error(data.error || "Проверьте настройки и попробуйте снова.");
       showArtwork(data.result);
       lastRecipe = data.result.recipe;
+      equipmentBase = lastRecipe;
+      equipmentEdits.clear();
       if (pendingImport === data.id) {
         restoredRecipe = lastRecipe;
         presetControls = new Set([profile, estate, ...controls.keys()]);
@@ -477,6 +485,8 @@ function applyExample(example) {
   restoredRecipe = undefined;
   preservedAppearance = undefined;
   lastRecipe = example.recipe;
+  equipmentBase = lastRecipe;
+  equipmentEdits.clear();
   updateRecipeDownload(lastRecipe);
   automaticMaterialsReady = true;
   updateOptions();
@@ -524,7 +534,7 @@ function scheduleRender(delay = 0) {
 async function loadCatalog() {
   setStatus("Загружаем редактор…", { busy: true });
   try {
-    const response = await fetch("./studio.json?v=druzhina-early-1");
+    const response = await fetch("./studio.json?v=gear-fit-1");
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const { catalog: data, examples } = await response.json();
     profile.replaceChildren(new Option("По seed", ""));
@@ -598,6 +608,8 @@ function useAutomatic(changed) {
 }
 
 function reseed(delay = 0) {
+  equipmentBase = undefined;
+  equipmentEdits.clear();
   restoredRecipe = undefined;
   preservedAppearance = undefined;
   useAutomatic();
@@ -615,6 +627,12 @@ editor.addEventListener("change", event => {
   const target = event.target;
   const control = controls.get(target);
   if (!control && target !== profile && target !== estate) return;
+  if (control?.kind === "equipment" && equipmentBase) {
+    equipmentEdits.set(control.field, target.value || null);
+  } else if (control?.kind !== "equipment") {
+    equipmentBase = undefined;
+    equipmentEdits.clear();
+  }
   if (control?.kind === "equipment" && !target.value) clearMaterialChoices(control.field);
   if (target === profile || target === estate) useAutomatic(target);
   if ((control?.kind === "equipment" || target === estate) && lastRecipe && !restoredRecipe) {
@@ -623,13 +641,15 @@ editor.addEventListener("change", event => {
     preservedAppearance = undefined;
     restoredRecipe = undefined;
   }
-  else presetControls?.delete(target);
+  presetControls?.delete(target);
   if (!catalog.material_slots?.[control?.field]) invalidateAutomaticMaterials();
   updateOptions();
   if (outfitDetailFields.includes(control?.field)) setPortraitView("full");
   scheduleRender();
 });
 reset.addEventListener("click", () => {
+  equipmentBase = undefined;
+  equipmentEdits.clear();
   useAutomatic();
   for (const select of [profile, estate, ...controls.keys()]) select.value = "";
   lastRecipe = undefined;
