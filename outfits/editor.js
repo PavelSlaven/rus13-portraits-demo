@@ -29,6 +29,7 @@ const presetPickers = [
   { field: "region", select: document.querySelector("#northwest-examples") },
   { field: "shield_region", select: document.querySelector("#shield-examples") },
   { field: "armour_group", select: document.querySelector("#armour-examples") },
+  { field: "druzhina_group", select: document.querySelector("#druzhina-examples") },
   { field: "weapon_region", select: document.querySelector("#eurasian-weapon-examples") },
 ].filter(({ select }) => select);
 const groupedExamples = new Map();
@@ -271,7 +272,7 @@ function updateNotes(recipe) {
   const { outfit, cloak, headgear, bow = "none", bow_case: bowCase, carry } = gear;
   const carried = carry !== "held";
   const holdingBow = !carried && bow !== "none";
-  const cased = carried && bow === "novgorod_composite" && bowCase !== "none";
+  const cased = carried && catalog.cased_bows.includes(bow) && bowCase !== "none";
   const jewelryHidden = catalog.jewelry_hidden_by?.includes(outfit);
   for (const [select, { kind, field, definition, note }] of controls) {
     const automatic = definition.values[recipe?.[kind]?.[field]];
@@ -341,7 +342,7 @@ function selection() {
 }
 
 function exampleArtwork(id) {
-  return Object.fromEntries(artworkViews.map(view => [view, `./${id}-${view}.svg?v=headwear-seams-1`]));
+  return Object.fromEntries(artworkViews.map(view => [view, `./${id}-${view}.svg?v=druzhina-early-1`]));
 }
 
 function setArtworkSource(image, download, url) {
@@ -396,7 +397,7 @@ function setPortraitView(view) {
 
 function startRenderer() {
   if (renderer) return;
-  const worker = new Worker("./renderer-worker.js?v=headwear-seams-1", { name: "Rus13" });
+  const worker = new Worker("./renderer-worker.js?v=druzhina-early-1", { name: "Rus13" });
   renderer = worker;
   function fail() {
     worker.terminate();
@@ -523,7 +524,7 @@ function scheduleRender(delay = 0) {
 async function loadCatalog() {
   setStatus("Загружаем редактор…", { busy: true });
   try {
-    const response = await fetch("./studio.json?v=izyaslav-armhole-1");
+    const response = await fetch("./studio.json?v=druzhina-early-1");
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const { catalog: data, examples } = await response.json();
     profile.replaceChildren(new Option("По seed", ""));
