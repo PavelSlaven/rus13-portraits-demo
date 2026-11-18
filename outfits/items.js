@@ -129,12 +129,12 @@ async function render() {
 
 async function start() {
   try {
-    const response = await fetch("./image-inventory.json?v=izyaslav-trim-2");
+    const response = await fetch("./image-inventory.json?v=izyaslav-sleeve-1");
     if (!response.ok) throw new Error("Каталог INDEX недоступен.");
     items = await response.json();
     for (const category of new Set(items.map(item => item.category))) el("category").append(new Option(category, category));
     if (document.body.dataset.runtime === "browser") {
-      worker = new Worker("./renderer-worker.js?v=izyaslav-trim-2", {name:"Rus13 · INDEX"});
+      worker = new Worker("./renderer-worker.js?v=izyaslav-sleeve-1", {name:"Rus13 · INDEX"});
       worker.addEventListener("message", ({data}) => {
         if (data.kind === "ready") {ready = true; if (pending) worker.postMessage(pending);}
         else if (data.id === jobId && data.kind === "rendered") show(data.result);
